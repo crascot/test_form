@@ -15,7 +15,7 @@ export default function reducerTicker(state = initialState, action) {
       }
     case 'RESET':
       return {
-        count: state.count = 0
+        count: 0
       }
     default:
       return state
