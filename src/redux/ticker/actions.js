@@ -15,3 +15,9 @@ export const ticketReset = () => {
     type: 'RESET'
   }
 }
+
+export const send = () => {
+  return {
+    type: 'SEND'
+  }
+}
