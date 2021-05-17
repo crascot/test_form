@@ -5,21 +5,20 @@ import { ticketMinus, ticketPlus, ticketReset, send } from '../redux/ticker/acti
 
 const Ticker = (props) => {
 
-  const [num, setNum] = useState(10);
+  const [num, setNum] = useState(0)
 
   return (
     <div>
-      ticker: {num + props.count}
+      ticker: {props.count}
 
       <button onClick={props.ticketPlus}>PLUS</button>
       <button onClick={props.ticketMinus}>MINUS</button>
       <button onClick={props.ticketReset}>RESET</button>
 
-      {/* <hr width='0' />
+      <hr width='0' />
 
-      <input type='text' />
-
-      <button>SEND</button> */}
+      <input type='text' name='input' value={num} />
+      <button onClick={() => setNum(num + props.count)}>SEND</button>
     </div>
   )
 }
