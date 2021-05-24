@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { ticketMinus, ticketPlus, ticketReset, send } from '../redux/ticker/actions'
+import { ticketMinus, ticketPlus, ticketReset } from '../redux/ticker/actions'
 
 
 const Ticker = (props) => {
 
-  const [num, setNum] = useState(0)
+  const [num, setNum] = useState('')
+  const [countNum, setCount] = useState(props.count)
+
+  let inputOnChange = (event) => {
+    setNum(Number((event.target.value)))
+  }
+
+  let send = () => {
+    setCount(num + countNum)
+  }
 
   return (
     <div>
-      ticker: {props.count}
+      ticker: {countNum + props.count}
 
       <button onClick={props.ticketPlus}>PLUS</button>
       <button onClick={props.ticketMinus}>MINUS</button>
@@ -17,8 +26,8 @@ const Ticker = (props) => {
 
       <hr width='0' />
 
-      <input type='text' name='input' value={num} />
-      <button onClick={() => setNum(num + props.count)}>SEND</button>
+      <input value={num} onChange={inputOnChange} />
+      <button onClick={send}>SEND</button>
     </div>
   )
 }
@@ -30,6 +39,5 @@ export default connect((state) => {
 }, (dispatch) => ({
   ticketPlus: () => dispatch(ticketPlus()),
   ticketMinus: () => dispatch(ticketMinus()),
-  ticketReset: () => dispatch(ticketReset()),
-  send: () => dispatch(send())
+  ticketReset: () => dispatch(ticketReset())
 }))(Ticker)
