@@ -40,7 +40,7 @@ const Form = () => {
       alert('Почта некорректна')
     } else if (!password) {
       alert('Введите пароль')
-    } else if (password < 8) {
+    } else if (password.length < 8) {
       alert('Этот пароль слишкой короткий')
     } else if (password !== confirmPassword) {
       alert('Пароли не совпадают')
