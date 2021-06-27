@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Card } from '@material-ui/core';
+import { Input, Button, Container, Grid, Typography, Card } from '@material-ui/core';
 
 
 const Login = () => {
@@ -28,23 +28,38 @@ const Login = () => {
           reject(alert('Введите пароль'))
         } else if (password.length < 8) {
           reject(alert('Этот пароль слишкой короткий'))
-        }
+        } else (document.getElementById('loader').classList.remove('hide'));
+
+        document.getElementById('login').style.pointerEvents = 'none'
+
         setTimeout(() => {
           const loginData = [
             localStorage.getItem('nickname'),
             localStorage.getItem('password')
           ]
           resolve(loginData)
-        }, 1000)
+        }, 3000);
       }, 0)
     })
     promise
-      .then(data => render(
-        <Card>
-          <p>Ваше имя: {data[0]}</p>
-          <p>Ваш пароль: {data[1]}</p>
-        </Card>
-      ))
+      .then(data => {
+        document.getElementById('loader').classList.add('hide')
+        render(
+          <Container maxWidth='sm'>
+            <Card>
+              <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography >
+              <Typography variant="subtitle1">Ваш пароль: {data[1]}</Typography >
+            </Card>
+          </Container>
+        )
+      })
+  }
+
+  function Clear() {
+    localStorage.clear()
+
+    setNickname('');
+    setPassword('')
   }
 
   useEffect(() => {
@@ -53,12 +68,14 @@ const Login = () => {
   }, [])
 
   return (
-    <Card maxWidth="sm" style={{padding: '10px'}}>
+    <div>
       <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
       <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
-      <Button size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
-      <Button onClick={() => localStorage.clear()} >Очистить</Button>
-    </Card>
+      <Grid container direction="row" justify="space-between">
+        <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
+        <Button onClick={Clear} >Очистить</Button>
+      </Grid>
+    </div>
   )
 }
 
