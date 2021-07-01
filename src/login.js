@@ -1,6 +1,6 @@
-import { render } from '@testing-library/react';
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Container, Grid, Typography, Card } from '@material-ui/core';
+import { render } from '@testing-library/react';
+import { Input, Button, Container, Grid, Typography, Card, CircularProgress } from '@material-ui/core';
 
 
 const Login = () => {
@@ -28,10 +28,10 @@ const Login = () => {
           reject(alert('Введите пароль'))
         } else if (password.length < 8) {
           reject(alert('Этот пароль слишкой короткий'))
-        } else (document.getElementById('loader').classList.remove('hide'));
-
-        document.getElementById('login').style.pointerEvents = 'none'
-
+        } else {
+          document.getElementById('login').style.pointerEvents = 'none';
+          document.getElementById('loader').classList.remove('hide')
+        }
         setTimeout(() => {
           const loginData = [
             localStorage.getItem('nickname'),
@@ -68,14 +68,19 @@ const Login = () => {
   }, [])
 
   return (
-    <div>
+    <Card className='form' style={{ padding: '10px' }}>
+      <Grid container direction="row" justify="space-between">
+        <Typography variant='h5'>Войти в систему</Typography>
+        <CircularProgress id='loader' className='hide' />
+        <Button className='register' href='/register'>Зарегистриговаться</Button>
+      </Grid>
       <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
       <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
       <Grid container direction="row" justify="space-between">
         <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
         <Button onClick={Clear} >Очистить</Button>
       </Grid>
-    </div>
+    </Card>
   )
 }
 
