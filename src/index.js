@@ -4,15 +4,15 @@ import { Container } from '@material-ui/core';
 import Login from './login';
 import Register from './register';
 import './index.scss';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 
 const Form = () => {
   return (
     <Router>
       <Container maxWidth='sm'>
-        <Route exact path='/test_form' component={Login} />
-        <Route exact path='/register' component={Register} />
+        <Route exact path='/test_form/login' component={Login} />
+        <Route exact path='/test_form/register' component={Register} />
       </Container>
     </Router>
   )

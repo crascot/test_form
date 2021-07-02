@@ -72,7 +72,7 @@ const Login = () => {
       <Grid container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
         <CircularProgress id='loader' className='hide' />
-        <Button className='register' href='/register'>Зарегистриговаться</Button>
+        <Button className='register' href='/test_form/register'>Зарегистриговаться</Button>
       </Grid>
       <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
       <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
