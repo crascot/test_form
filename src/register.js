@@ -97,7 +97,7 @@ const Register = () => {
             <Grid container direction="row" justify="space-between">
                 <Typography variant='h5'>Зарегистриговаться</Typography>
                 <CircularProgress id='loader' className='hide' />
-                <Button className='register' href='/'>Войти</Button>
+                <Button className='register' href='/test_form'>Войти</Button>
             </Grid>
             <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
             <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' /> <hr width='0' />

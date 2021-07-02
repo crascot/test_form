@@ -11,8 +11,8 @@ const Form = () => {
   return (
     <Router>
       <Container maxWidth='sm'>
-        <Route exact path='/' component={Login} />
-        <Route path='/register' component={Register} />
+        <Route exact path='/test_form' component={Login} />
+        <Route exact path='/register' component={Register} />
       </Container>
     </Router>
   )
