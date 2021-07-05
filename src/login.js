@@ -75,9 +75,11 @@ const Login = () => {
         <CircularProgress id='loader' className='hide' />
         <Button className='register'><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
-      <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
-      <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
-      <Grid container direction="row" justify="space-between">
+      <Grid className='form-register'>
+        <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
+        <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
+      </Grid>
+      <Grid className='form-register' container direction="row" justify="space-between">
         <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
         <Button onClick={Clear} >Очистить</Button>
       </Grid>
