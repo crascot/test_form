@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.scss"],"names":[],"mappings":"AAAA,MACI,sBAAwB,CAC3B,YAGG,8BAAgC,CAChC,oBAAuB","file":"main.0a0e3770.chunk.css","sourcesContent":[".hide {\r\n    display: none !important;\r\n}\r\n\r\n.register * {\r\n    text-decoration: none !important;\r\n    color: black !important;\r\n}"]}
