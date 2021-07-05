@@ -1,6 +1,7 @@
-import { render } from '@testing-library/react';
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Card, Grid, Container, Typography } from '@material-ui/core';
+import { render } from '@testing-library/react';
+import { Input, Button, Card, Grid, Container, Typography, CircularProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 
 const Register = () => {
@@ -46,9 +47,10 @@ const Register = () => {
                     reject(alert('Этот пароль слишкой короткий'))
                 } else if (password !== confirmPassword) {
                     reject(alert('Пароли не совпадают'))
+                } else {
+                    document.getElementById('register').style.pointerEvents = 'none';
+                    document.getElementById('loader').classList.remove('hide')
                 }
-                else (document.getElementById('loader').classList.remove('hide'))
-
                 setTimeout(() => {
                     const formData = [
                         localStorage.getItem('nickname'),
@@ -92,16 +94,23 @@ const Register = () => {
     }, [])
 
     return (
-        <div style={{ padding: '10px' }}>
-            <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
-            <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' /> <hr width='0' />
-            <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' /> <hr width='0' />
-            <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' /> <hr width='0' />
-            <Grid container direction="row" justify="space-between">
-                <Button size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
+        <Card className='form'>
+            <Grid className='form-register' container direction="row" justify="space-between">
+                <Typography variant='h5'>Зарегистриговаться</Typography>
+                <CircularProgress id='loader' className='hide' />
+                <Button className='register'><Link to='/'>Войти</Link></Button>
+            </Grid>
+            <Grid className='form-register'>
+                <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
+                <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' /> <hr width='0' />
+                <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' /> <hr width='0' />
+                <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' /> <hr width='0' />
+            </Grid>
+            <Grid className='form-register' container direction="row" justify="space-between">
+                <Button id='register' size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
                 <Button onClick={Clear} >Очистить</Button>
             </Grid>
-        </div>
+        </Card>
     )
 }
 
