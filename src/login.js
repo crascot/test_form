@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { render } from '@testing-library/react';
 import { Input, Button, Container, Grid, Typography, Card, CircularProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 
 const Login = () => {
@@ -68,11 +69,11 @@ const Login = () => {
   }, [])
 
   return (
-    <Card className='form' style={{ padding: '10px' }}>
-      <Grid container direction="row" justify="space-between">
+    <Card className='form'>
+      <Grid className='form-register' container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
         <CircularProgress id='loader' className='hide' />
-        <Button className='register' href='/test_form/register'>Зарегистриговаться</Button>
+        <Button className='register'><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
       <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
       <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
