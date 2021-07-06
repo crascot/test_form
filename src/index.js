@@ -4,7 +4,7 @@ import { Container } from '@material-ui/core';
 import Login from './login';
 import Register from './register';
 import './index.scss';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 
 
 const Form = () => {

@@ -67,7 +67,7 @@ const Register = () => {
                 document.getElementById('loader').classList.add('hide')
                 render(
                     <Container maxWidth='sm'>
-                        <Card>
+                        <Card className='form'>
                             <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography>
                             <Typography variant="subtitle1">Ваша почта: {data[1]}</Typography>
                             <Typography variant="subtitle1">Ваш пароль: {data[2]}</Typography>
@@ -98,7 +98,7 @@ const Register = () => {
             <Grid className='form-register' container direction="row" justify="space-between">
                 <Typography variant='h5'>Зарегистриговаться</Typography>
                 <CircularProgress id='loader' className='hide' />
-                <Button className='register'><Link to='/'>Войти</Link></Button>
+                <Button className='register' variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
             <Grid className='form-register'>
                 <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
@@ -106,7 +106,7 @@ const Register = () => {
                 <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' /> <hr width='0' />
                 <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' /> <hr width='0' />
             </Grid>
-            <Grid className='form-register' container direction="row" justify="space-between">
+            <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
                 <Button onClick={Clear} >Очистить</Button>
             </Grid>
