@@ -47,7 +47,7 @@ const Login = () => {
         document.getElementById('loader').classList.add('hide')
         render(
           <Container maxWidth='sm'>
-            <Card>
+            <Card className='form-register data'>
               <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography >
               <Typography variant="subtitle1">Ваш пароль: {data[1]}</Typography >
             </Card>
@@ -70,17 +70,18 @@ const Login = () => {
 
   return (
     <Card className='form'>
-      <Grid className='form-register' container direction="row" justify="space-between">
+      <Grid className='form-register head' container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
-        <CircularProgress id='loader' className='hide' />
-        <Button className='register'><Link to='/register'>Зарегистриговаться</Link></Button>
+        <Typography variant='h5'>или</Typography>
+        <Button onClick={Clear} className='register' variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
-      <Grid className='form-register'>
+      <Grid className='form-register body'>
         <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
         <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
       </Grid>
-      <Grid className='form-register' container direction="row" justify="space-between">
+      <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
         <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
+        <CircularProgress id='loader' className='hide visible' />
         <Button onClick={Clear} >Очистить</Button>
       </Grid>
     </Card>
