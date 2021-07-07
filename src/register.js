@@ -98,7 +98,7 @@ const Register = () => {
             <Grid className='form-register head' container direction="row" justify="space-between">
                 <Typography variant='h5'>Зарегистриговаться</Typography>
                 <Typography variant='h5'>или</Typography>
-                <Button className='register' variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
+                <Button onClick={Clear} className='register' variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
             <Grid className='form-register body'>
                 <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
