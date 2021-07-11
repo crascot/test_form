@@ -1,10 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { render } from '@testing-library/react';
-import { Input, Button, Container, Grid, Typography, Card, CircularProgress } from '@material-ui/core';
+import {
+  Input,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  Card,
+  CircularProgress,
+  makeStyles
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 
+const useStyles = makeStyles({
+  body: {
+    margin: '20px 0',
+    paddingTop: 20,
+    borderTop: '3px solid #0dcaf0',
+  },
+  register: {
+    '& *': {
+      textDecoration: 'none',
+      color: 'inherit',
+    }
+  },
+  hide: {
+    display: 'none',
+    margin: 30,
+  }
+})
+
 const Login = () => {
+
+  const classes = useStyles()
 
   const [nickname, setNickname] = useState('')
   const [password, setPassword] = useState('')
@@ -31,7 +60,7 @@ const Login = () => {
           reject(alert('Этот пароль слишкой короткий'))
         } else {
           document.getElementById('login').style.pointerEvents = 'none';
-          document.getElementById('loader').classList.remove('hide')
+          document.getElementById('loader').classList.remove(classes.hide)
         }
         setTimeout(() => {
           const loginData = [
@@ -44,7 +73,7 @@ const Login = () => {
     })
     promise
       .then(data => {
-        document.getElementById('loader').classList.add('hide')
+        document.getElementById('loader').classList.add(classes.hide)
         render(
           <Container maxWidth='sm'>
             <Card className='form-register data'>
@@ -73,15 +102,15 @@ const Login = () => {
       <Grid className='form-register head' container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
         <Typography variant='h5'>или</Typography>
-        <Button onClick={Clear} className='register' variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
+        <Button onClick={Clear} className={classes.register} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
-      <Grid className='form-register body'>
+      <Grid className={`form-register ${classes.body}`}>
         <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
         <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
       </Grid>
       <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
         <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
-        <CircularProgress id='loader' className='hide visible' />
+        <CircularProgress id='loader' className={`${classes.hide} visible`} />
         <Button onClick={Clear} >Очистить</Button>
       </Grid>
     </Card>

@@ -1,10 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { render } from '@testing-library/react';
-import { Input, Button, Card, Grid, Container, Typography, CircularProgress } from '@material-ui/core';
+import {
+    Input,
+    Button,
+    Card,
+    Grid,
+    Container,
+    Typography,
+    CircularProgress,
+    makeStyles
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 
+const useStyles = makeStyles({
+    body: {
+        margin: '20px 0',
+        paddingTop: 20,
+        borderTop: '3px solid #0dcaf0',
+    },
+    register: {
+        '& *': {
+            textDecoration: 'none',
+            color: 'inherit',
+        }
+    },
+    hide: {
+        display: 'none',
+        margin: 30,
+    }
+})
+
 const Register = () => {
+
+    const classes = useStyles()
 
     const [nickname, setNickname] = useState('')
     const [email, setEmail] = useState('')
@@ -49,7 +78,7 @@ const Register = () => {
                     reject(alert('Пароли не совпадают'))
                 } else {
                     document.getElementById('register').style.pointerEvents = 'none';
-                    document.getElementById('loader').classList.remove('hide')
+                    document.getElementById('loader').classList.remove(classes.hide)
                 }
                 setTimeout(() => {
                     const formData = [
@@ -64,7 +93,7 @@ const Register = () => {
         })
         promise
             .then(data => {
-                document.getElementById('loader').classList.add('hide')
+                document.getElementById('loader').classList.add(classes.hide)
                 render(
                     <Container maxWidth='sm'>
                         <Card className='form-register data'>
@@ -98,9 +127,9 @@ const Register = () => {
             <Grid className='form-register head' container direction="row" justify="space-between">
                 <Typography variant='h5'>Зарегистриговаться</Typography>
                 <Typography variant='h5'>или</Typography>
-                <Button onClick={Clear} className='register' variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
+                <Button onClick={Clear} className={classes.register} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
-            <Grid className='form-register body'>
+            <Grid className={`form-register ${classes.body}`}>
                 <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
                 <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' /> <hr width='0' />
                 <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' /> <hr width='0' />
@@ -108,7 +137,7 @@ const Register = () => {
             </Grid>
             <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
-                <CircularProgress id='loader' className='hide visible' />
+                <CircularProgress id='loader' className={`${classes.hide} + visible`} />
                 <Button onClick={Clear} >Очистить</Button>
             </Grid>
         </Card>
