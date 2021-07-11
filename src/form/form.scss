@@ -1,5 +1,5 @@
 .form {
-    margin: 50% auto;
+    margin: 50% 0 0 0;
     width: 515px;
     padding: 20px;
 }
@@ -12,6 +12,8 @@
 @media (max-width: 600px) {
     .form {
         width: max-content !important;
+        margin: 0 auto;
+        margin-top: 50%;
     }
     .form-register {
         flex-direction: column;
