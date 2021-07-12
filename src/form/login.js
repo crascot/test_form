@@ -16,8 +16,13 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles({
   body: {
     margin: '20px 0',
-    paddingTop: 20,
+    paddingBottom: 5,
     borderTop: '3px solid #0dcaf0',
+
+    '& *': {
+      width: '100%',
+      marginTop: 10,
+    },
   },
   register: {
     '& *': {
@@ -28,6 +33,9 @@ const useStyles = makeStyles({
   hide: {
     display: 'none',
     margin: 30,
+  },
+  success: {
+    color: '#4caf50'
   }
 })
 
@@ -45,11 +53,9 @@ const Login = () => {
 
   function targetName(event) {
     setNickname(event.target.value)
-    localStorage.setItem('nickname', event.target.value)
   }
   function targetPassword(event) {
     setPassword(event.target.value)
-    localStorage.setItem('password', event.target.value)
   }
 
   function Click() {
@@ -67,38 +73,35 @@ const Login = () => {
           document.getElementById('login').style.pointerEvents = 'none';
           document.getElementById('loader').classList.remove(classes.hide)
         }
-        setTimeout(() => {
-          const loginData = [
-            localStorage.getItem('nickname'),
-            localStorage.getItem('password')
-          ]
-          resolve(loginData)
-        }, 3000);
+        resolve()
       }, 0)
     })
     promise
-      .then(data => {
-        document.getElementById('loader').classList.add(classes.hide)
-        if (data[0] !== user.nickname || data[1] !== user.password) {
-          render(
-            <Container maxWidth='sm'>
-            <Card className='form-register data'>
-            <Typography variant="subtitle1" color='secondary'>Ошибка, данного пользователя не существует</Typography>
-            </Card>
-          </Container>
-          )
-        }
-
-        else (
-          render(
-            <Container maxWidth='sm'>
-              <Card className='form-register data'>
-                <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography >
-                <Typography variant="subtitle1">Ваш пароль: {data[1]}</Typography >
-              </Card>
-            </Container>
-          )
-        )
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (nickname !== user.nickname || password !== user.password) {
+              render(
+                <Container maxWidth='sm'>
+                  <Card className='form-register data'>
+                    <Typography variant="subtitle1" color="secondary">Ошибка, данного пользователя не существует</Typography>
+                  </Card>
+                </Container>
+              )
+            } else {
+              render(
+                <Container maxWidth='sm'>
+                  <Card className='form-register data'>
+                    <Typography variant="subtitle1" className={classes.success}>Вы успешно авторизировались</Typography >
+                  </Card>
+                </Container>
+              )
+              resolve(localStorage.setItem('AUTH_TOKEN', 'TOKEN_BODY'))
+            }
+            document.getElementById('login').style.pointerEvents = 'auto';
+            document.getElementById('loader').classList.add(classes.hide);
+          }, 3000);
+        })
       })
   }
 
@@ -121,9 +124,9 @@ const Login = () => {
         <Typography variant='h5'>или</Typography>
         <Button onClick={Clear} className={classes.register} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
-      <Grid className={`form-register ${classes.body}`}>
-        <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
-        <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' /> <hr width='0' />
+      <Grid className={`form-register ${classes.body}`} container>
+        <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' />
+        <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' />
       </Grid>
       <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
         <Button id='login' size="small" variant="contained" onClick={Click} type='submit' >Войти</Button >
