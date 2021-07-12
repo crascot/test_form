@@ -16,8 +16,13 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles({
     body: {
         margin: '20px 0',
-        paddingTop: 20,
+        paddingBottom: 5,
         borderTop: '3px solid #0dcaf0',
+
+        '& *': {
+            width: '100%',
+            marginTop: 10,
+        },
     },
     register: {
         '& *': {
@@ -80,19 +85,28 @@ const Register = () => {
                     document.getElementById('register').style.pointerEvents = 'none';
                     document.getElementById('loader').classList.remove(classes.hide)
                 }
-                setTimeout(() => {
-                    const formData = [
-                        localStorage.getItem('nickname'),
-                        localStorage.getItem('email'),
-                        localStorage.getItem('password'),
-                        localStorage.getItem('confirmPassword')
-                    ]
-                    resolve(formData)
-                }, 3000)
+                resolve()
             }, 0)
         })
         promise
+            .then(() => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const loginData = [
+                            localStorage.getItem('nickname'),
+                            localStorage.getItem('email'),
+                            localStorage.getItem('password'),
+                            localStorage.getItem('confirmPassword')
+                        ]
+                        resolve(loginData)
+
+                        document.getElementById('register').style.pointerEvents = 'auto';
+                        document.getElementById('loader').classList.add(classes.hide)
+                    }, 3000);
+                })
+            })
             .then(data => {
+                document.getElementById('register').style.pointerEvents = 'auto';
                 document.getElementById('loader').classList.add(classes.hide)
                 render(
                     <Container maxWidth='sm'>
@@ -129,11 +143,11 @@ const Register = () => {
                 <Typography variant='h5'>или</Typography>
                 <Button onClick={Clear} className={classes.register} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
-            <Grid className={`form-register ${classes.body}`}>
-                <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' /> <hr width='0' />
-                <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' /> <hr width='0' />
-                <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' /> <hr width='0' />
-                <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' /> <hr width='0' />
+            <Grid className={`form-register ${classes.body}`} container>
+                <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' />
+                <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' />
+                <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' />
+                <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' />
             </Grid>
             <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
