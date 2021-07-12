@@ -31,6 +31,11 @@ const useStyles = makeStyles({
   }
 })
 
+const user = {
+  nickname: 'test',
+  password: 'password'
+}
+
 const Login = () => {
 
   const classes = useStyles()
@@ -74,13 +79,25 @@ const Login = () => {
     promise
       .then(data => {
         document.getElementById('loader').classList.add(classes.hide)
-        render(
-          <Container maxWidth='sm'>
+        if (data[0] !== user.nickname || data[1] !== user.password) {
+          render(
+            <Container maxWidth='sm'>
             <Card className='form-register data'>
-              <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography >
-              <Typography variant="subtitle1">Ваш пароль: {data[1]}</Typography >
+            <Typography variant="subtitle1" color='secondary'>Ошибка, данного пользователя не существует</Typography>
             </Card>
           </Container>
+          )
+        }
+
+        else (
+          render(
+            <Container maxWidth='sm'>
+              <Card className='form-register data'>
+                <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography >
+                <Typography variant="subtitle1">Ваш пароль: {data[1]}</Typography >
+              </Card>
+            </Container>
+          )
         )
       })
   }
