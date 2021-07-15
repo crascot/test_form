@@ -125,7 +125,7 @@ const Login = () => {
       <Grid className='form-register head' container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
         <Typography variant='h5'>или</Typography>
-        <Button onClick={Clear} className={classes.register} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
+        <Button onClick={Clear} className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
       <Grid className={`form-register ${classes.body}`} container>
         <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' />
