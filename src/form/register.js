@@ -45,6 +45,8 @@ const Register = () => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
+    const [disabled, setDisabled] = useState(false)
+
     function targetName(event) {
         setNickname(event.target.value)
         localStorage.setItem('nickname', event.target.value)
@@ -82,7 +84,7 @@ const Register = () => {
                 } else if (password !== confirmPassword) {
                     reject(alert('Пароли не совпадают'))
                 } else {
-                    document.getElementById('register').style.pointerEvents = 'none';
+                    setDisabled(true)
                     document.getElementById('loader').classList.remove(classes.hide)
                 }
                 resolve()
@@ -100,13 +102,12 @@ const Register = () => {
                         ]
                         resolve(loginData)
 
-                        document.getElementById('register').style.pointerEvents = 'auto';
+                        setDisabled(false)
                         document.getElementById('loader').classList.add(classes.hide)
                     }, 3000);
                 })
             })
             .then(data => {
-                document.getElementById('register').style.pointerEvents = 'auto';
                 document.getElementById('loader').classList.add(classes.hide)
                 render(
                     <Container maxWidth='sm'>
@@ -150,7 +151,7 @@ const Register = () => {
                 <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' />
             </Grid>
             <Grid className='form-register footer' container direction="row" justify="space-between">
-                <Button id='register' size="small" variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
+                <Button id='register' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
                 <CircularProgress id='loader' className={`${classes.hide} + visible`} />
                 <Button onClick={Clear} >Очистить</Button>
             </Grid>
