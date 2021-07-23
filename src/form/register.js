@@ -153,7 +153,7 @@ const Register = () => {
             <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
                 <CircularProgress id='loader' className={`${classes.hide} + visible`} />
-                <Button onClick={Clear} >Очистить</Button>
+                <Button onClick={Clear} disabled={disabled} >Очистить</Button>
             </Grid>
         </Card>
     )
