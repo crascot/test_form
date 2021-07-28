@@ -94,9 +94,6 @@ const Login = () => {
               render(
                 <Container maxWidth='sm'>
                   <Router><Redirect to={'/main'} /></Router>
-                  <Card className='form-register data'>
-                    <Typography variant="subtitle1" className={classes.success}>Вы успешно авторизировались</Typography >
-                  </Card>
                 </Container>
               )
               resolve(localStorage.setItem('AUTH_TOKEN', 'TOKEN_BODY'));
