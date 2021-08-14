@@ -1,40 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { render } from '@testing-library/react';
 import {
-    Input,
     Button,
     Card,
     Grid,
-    Container,
     Typography,
     CircularProgress,
-    makeStyles
+    TextField
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { dataBase } from '../database/database';
+import { useStyles } from './styles/styles';
 
-
-const useStyles = makeStyles({
-    body: {
-        margin: '20px 0',
-        paddingBottom: 5,
-        borderTop: '3px solid #0dcaf0',
-
-        '& *': {
-            width: '100%',
-            marginTop: 10,
-        },
-    },
-    register: {
-        '& *': {
-            textDecoration: 'none',
-            color: 'inherit',
-        }
-    },
-    hide: {
-        display: 'none',
-        margin: 30,
-    }
-})
 
 const Register = () => {
 
@@ -46,78 +22,75 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
 
     const [disabled, setDisabled] = useState(false)
+    const [hide, setHide] = useState(classes.hide)
 
     function targetName(event) {
         setNickname(event.target.value)
-        localStorage.setItem('nickname', event.target.value)
     }
     function targetEmail(event) {
         setEmail(event.target.value)
-        localStorage.setItem('email', event.target.value)
     }
     function targetPassword(event) {
         setPassword(event.target.value)
-        localStorage.setItem('password', event.target.value)
     }
     function targetConfirmPassword(event) {
         setConfirmPassword(event.target.value)
-        localStorage.setItem('confirmPassword', event.target.value)
     }
 
     function Click() {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
         let promise = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (!nickname) {
-                    reject(alert('Пожалуйста введите ваше имя'))
-                } else if (+nickname) {
-                    reject(alert('Имя не может состоять из цифр'))
-                } else if (!email) {
-                    reject(alert('Введите почту'))
-                } else if (!reg.test(email)) {
-                    reject(alert('Почта некорректна'))
-                } else if (!password) {
-                    reject(alert('Введите пароль'))
-                } else if (password.length < 8) {
-                    reject(alert('Этот пароль слишкой короткий'))
-                } else if (password !== confirmPassword) {
-                    reject(alert('Пароли не совпадают'))
-                } else {
-                    setDisabled(true)
-                    document.getElementById('loader').classList.remove(classes.hide)
-                }
-                resolve()
-            }, 0)
+            if (!nickname) {
+                reject(alert('Пожалуйста введите ваше имя'))
+            } else if (+nickname) {
+                reject(alert('Имя не может состоять из цифр'))
+            } else if (!email) {
+                reject(alert('Введите почту'))
+            } else if (!reg.test(email)) {
+                reject(alert('Почта некорректна'))
+            } else if (!password) {
+                reject(alert('Введите пароль'))
+            } else if (password.length < 8) {
+                reject(alert('Этот пароль слишкой короткий'))
+            } else if (password !== confirmPassword) {
+                reject(alert('Пароли не совпадают'))
+            } else {
+                setDisabled(true)
+                setHide()
+            }
+            resolve()
         })
         promise
             .then(() => {
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
-                        const loginData = [
-                            localStorage.getItem('nickname'),
-                            localStorage.getItem('email'),
-                            localStorage.getItem('password'),
-                            localStorage.getItem('confirmPassword')
-                        ]
-                        resolve(loginData)
+                        let DB = JSON.parse(localStorage.getItem('database'))
 
-                        setDisabled(false)
-                        document.getElementById('loader').classList.add(classes.hide)
+                        let duplicate = DB.users.find(user => user.email === email)
+
+                        if (duplicate) reject(alert('Данная почта занята'))
+                        else resolve({
+                            name: nickname,
+                            email: email,
+                            password: password
+                        })
                     }, 3000);
                 })
             })
-            .then(data => {
-                document.getElementById('loader').classList.add(classes.hide)
-                render(
-                    <Container maxWidth='sm'>
-                        <Card className='form-register data'>
-                            <Typography variant="subtitle1">Ваше имя: {data[0]}</Typography>
-                            <Typography variant="subtitle1">Ваша почта: {data[1]}</Typography>
-                            <Typography variant="subtitle1">Ваш пароль: {data[2]}</Typography>
-                        </Card>
-                    </Container>
-                )
+            .then((data) => {
+                return new Promise(resolve => {
+                    let registerUsers = dataBase.users
+                    registerUsers.push(data)
+                    resolve(registerUsers)
+                })
+            })
+            .then((data) => {
+                localStorage.setItem('database', JSON.stringify({ users: data }))
+            })
+            .finally(() => {
+                setDisabled(false)
+                setHide(classes.hide)
             })
     }
 
@@ -142,17 +115,17 @@ const Register = () => {
             <Grid className='form-register head' container direction="row" justify="space-between">
                 <Typography variant='h5'>Зарегистриговаться</Typography>
                 <Typography variant='h5'>или</Typography>
-                <Button onClick={Clear} className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
+                <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
             <Grid className={`form-register ${classes.body}`} container>
-                <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' />
-                <Input value={email} onChange={targetEmail} type='email' placeholder='Введите email' />
-                <Input value={password} onChange={targetPassword} type='password' placeholder='Придумайте пароль' />
-                <Input value={confirmPassword} onChange={targetConfirmPassword} type='password' placeholder='Подтвердите пароль' />
+                <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} type='text' />
+                <TextField id="standard-basic" label="Введите вашу почту" value={email} onChange={targetEmail} type='email' />
+                <TextField id="standard-basic" label="Придумайте пароль" value={password} onChange={targetPassword} type='password' />
+                <TextField id="standard-basic" label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} type='password' />
             </Grid>
             <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
-                <CircularProgress id='loader' className={`${classes.hide} + visible`} />
+                <CircularProgress id='loader' className={hide} />
                 <Button onClick={Clear} disabled={disabled} >Очистить</Button>
             </Grid>
         </Card>

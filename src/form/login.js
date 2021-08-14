@@ -1,48 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { render } from '@testing-library/react';
 import {
-  Input,
   Button,
-  Container,
   Grid,
   Typography,
   Card,
   CircularProgress,
-  makeStyles
+  TextField
 } from '@material-ui/core';
-import { HashRouter as Router, Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { User } from '../users/user';
+import { useStyles } from './styles/styles';
 
-
-const useStyles = makeStyles({
-  body: {
-    margin: '20px 0',
-    paddingBottom: 5,
-    borderTop: '3px solid #0dcaf0',
-
-    '& *': {
-      width: '100%',
-      marginTop: 10,
-    },
-  },
-  register: {
-    '& *': {
-      textDecoration: 'none',
-      color: 'inherit',
-    }
-  },
-  hide: {
-    display: 'none',
-    margin: 30,
-  },
-  success: {
-    color: '#4caf50'
-  }
-})
-
-const user = {
-  nickname: 'test',
-  password: 'password'
-}
 
 const Login = () => {
 
@@ -50,8 +18,9 @@ const Login = () => {
 
   const [nickname, setNickname] = useState('')
   const [password, setPassword] = useState('')
-  
+
   const [disabled, setDisabled] = useState(false)
+  const [hide, setHide] = useState(classes.hide)
 
   function targetName(event) {
     setNickname(event.target.value)
@@ -62,44 +31,33 @@ const Login = () => {
 
   function Click() {
     let promise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (!nickname) {
-          reject(alert('Пожалуйста введите ваше имя'))
-        } else if (+nickname) {
-          reject(alert('Имя не может состоять из цифр'))
-        } else if (!password) {
-          reject(alert('Введите пароль'))
-        } else if (password.length < 8) {
-          reject(alert('Этот пароль слишкой короткий'))
-        } else {
-          setDisabled(true)
-          document.getElementById('loader').classList.remove(classes.hide)
-        }
-        resolve()
-      }, 0)
+      if (!nickname) {
+        reject(alert('Пожалуйста введите ваше имя'))
+      } else if (+nickname) {
+        reject(alert('Имя не может состоять из цифр'))
+      } else if (!password) {
+        reject(alert('Введите пароль'))
+      } else if (password.length < 8) {
+        reject(alert('Этот пароль слишкой короткий'))
+      } else {
+        setDisabled(true)
+        setHide()
+      }
+      resolve()
     })
     promise
       .then(() => {
         return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (nickname !== user.nickname || password !== user.password) {
-              render(
-                <Container maxWidth='sm'>
-                  <Card className='form-register data'>
-                    <Typography variant="subtitle1" color="secondary">Ошибка, данного пользователя не существует</Typography>
-                  </Card>
-                </Container>
-              )
+          setTimeout((user) => {
+            if (nickname !== User.name) {
+              reject(alert('Пользователя с данным именем не существует'))
+            } else if (password !== User.password) {
+              reject(alert('Неправильный пароль'))
             } else {
-              render(
-                <Container maxWidth='sm'>
-                  <Router><Redirect to={'/main'} /></Router>
-                </Container>
-              )
-              resolve(localStorage.setItem('AUTH_TOKEN', 'TOKEN_BODY'));
+              alert('Добро пожаловать')
             }
             setDisabled(false)
-            document.getElementById('loader').classList.add(classes.hide);
+            setHide(classes.hide)
           }, 3000);
         })
       })
@@ -122,15 +80,15 @@ const Login = () => {
       <Grid className='form-register head' container direction="row" justify="space-between">
         <Typography variant='h5'>Войти в систему</Typography>
         <Typography variant='h5'>или</Typography>
-        <Button onClick={Clear} className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
+        <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
       <Grid className={`form-register ${classes.body}`} container>
-        <Input value={nickname} onChange={targetName} type='text' placeholder='Введите имя' />
-        <Input value={password} onChange={targetPassword} type='password' placeholder='Введите пароль' />
+        <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} type='text' />
+        <TextField id="standard-basic" label="Введите пароль" value={password} onChange={targetPassword} type='password' />
       </Grid>
       <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
         <Button id='login' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit'>Войти</Button>
-        <CircularProgress id='loader' className={`${classes.hide} visible`} />
+        <CircularProgress id='loader' className={hide} />
         <Button onClick={Clear} type='submit' disabled={disabled} >Очистить</Button>
       </Grid>
     </Card>
