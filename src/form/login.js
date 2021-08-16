@@ -7,8 +7,7 @@ import {
   CircularProgress,
   TextField
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { User } from '../users/user';
+import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
 
 
@@ -21,6 +20,8 @@ const Login = () => {
 
   const [disabled, setDisabled] = useState(false)
   const [hide, setHide] = useState(classes.hide)
+
+  const [redirect, setRedirect] = useState('')
 
   function targetName(event) {
     setNickname(event.target.value)
@@ -48,32 +49,37 @@ const Login = () => {
     promise
       .then(() => {
         return new Promise((resolve, reject) => {
-          setTimeout((user) => {
-            if (nickname !== User.name) {
-              reject(alert('Пользователя с данным именем не существует'))
-            } else if (password !== User.password) {
-              reject(alert('Неправильный пароль'))
-            } else {
-              alert('Добро пожаловать')
-            }
-            setDisabled(false)
-            setHide(classes.hide)
+          setTimeout(() => {
+            let DB = JSON.parse(localStorage.getItem('database'))
+            DB.users.forEach(user => {
+              if (user.name === nickname && user.password === password) {
+                resolve(alert('Добро пожаловать'))
+              } else {
+                reject(alert('Данного пользователя не существует или вы неправильно ввели свой пароль'))
+              }
+            });
           }, 3000);
         })
+      })
+      .then(() => {
+        setRedirect('/main')
+        Clear()
+      })
+      .finally(() => {
+        setDisabled(false)
+        setHide(classes.hide)
       })
   }
 
   function Clear() {
-    localStorage.clear()
-
     setNickname('');
     setPassword('');
   }
 
-  useEffect(() => {
-    setNickname(localStorage.getItem('nickname'))
-    setPassword(localStorage.getItem('password'))
-  }, [])
+  // useEffect(() => {
+  //   setNickname(localStorage.getItem('nickname'))
+  //   setPassword(localStorage.getItem('password'))
+  // }, [])
 
   return (
     <Card className='form'>
@@ -83,13 +89,13 @@ const Login = () => {
         <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
       </Grid>
       <Grid className={`form-register ${classes.body}`} container>
-        <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} type='text' />
-        <TextField id="standard-basic" label="Введите пароль" value={password} onChange={targetPassword} type='password' />
+        <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' />
+        <TextField id="standard-basic" label="Введите пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' />
       </Grid>
       <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
-        <Button id='login' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit'>Войти</Button>
+        <Button id='login' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit'><Redirect to={redirect} />Войти</Button>
         <CircularProgress id='loader' className={hide} />
-        <Button onClick={Clear} type='submit' disabled={disabled} >Очистить</Button>
+        <Button onClick={Clear} type='submit' disabled={disabled}>Очистить</Button>
       </Grid>
     </Card>
   )

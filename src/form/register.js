@@ -56,8 +56,8 @@ const Register = () => {
             } else if (password !== confirmPassword) {
                 reject(alert('Пароли не совпадают'))
             } else {
-                setDisabled(true)
-                setHide()
+            setDisabled(true)
+            setHide()
             }
             resolve()
         })
@@ -66,7 +66,6 @@ const Register = () => {
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         let DB = JSON.parse(localStorage.getItem('database'))
-
                         let duplicate = DB.users.find(user => user.email === email)
 
                         if (duplicate) reject(alert('Данная почта занята'))
@@ -87,6 +86,7 @@ const Register = () => {
             })
             .then((data) => {
                 localStorage.setItem('database', JSON.stringify({ users: data }))
+                Clear()
             })
             .finally(() => {
                 setDisabled(false)
@@ -95,20 +95,15 @@ const Register = () => {
     }
 
     function Clear() {
-        localStorage.clear()
-
         setNickname('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
     }
 
-    useEffect(() => {
-        setNickname(localStorage.getItem('nickname'))
-        setEmail(localStorage.getItem('email'))
-        setPassword(localStorage.getItem('password'))
-        setConfirmPassword(localStorage.getItem('confirmPassword'))
-    }, [])
+    // useEffect(() => {
+        
+    // }, [])
 
     return (
         <Card className='form'>
@@ -118,10 +113,10 @@ const Register = () => {
                 <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
             </Grid>
             <Grid className={`form-register ${classes.body}`} container>
-                <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} type='text' />
-                <TextField id="standard-basic" label="Введите вашу почту" value={email} onChange={targetEmail} type='email' />
-                <TextField id="standard-basic" label="Придумайте пароль" value={password} onChange={targetPassword} type='password' />
-                <TextField id="standard-basic" label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} type='password' />
+                <TextField id="standard-basic" label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' />
+                <TextField id="standard-basic" label="Введите вашу почту" value={email} onChange={targetEmail} disabled={disabled} type='email' />
+                <TextField id="standard-basic" label="Придумайте пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' />
+                <TextField id="standard-basic" label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} disabled={disabled} type='password' />
             </Grid>
             <Grid className='form-register footer' container direction="row" justify="space-between">
                 <Button id='register' size="small" disabled={disabled} variant="contained" onClick={Click} type='submit' >Зарегистриговаться</Button >
