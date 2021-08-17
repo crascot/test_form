@@ -41,24 +41,24 @@ const Register = () => {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
         let promise = new Promise((resolve, reject) => {
-            // if (!nickname) {
-            //     reject(alert('Пожалуйста введите ваше имя'))
-            // } else if (+nickname) {
-            //     reject(alert('Имя не может состоять из цифр'))
-            // } else if (!email) {
-            //     reject(alert('Введите почту'))
-            // } else if (!reg.test(email)) {
-            //     reject(alert('Почта некорректна'))
-            // } else if (!password) {
-            //     reject(alert('Введите пароль'))
-            // } else if (password.length < 8) {
-            //     reject(alert('Этот пароль слишкой короткий'))
-            // } else if (password !== confirmPassword) {
-            //     reject(alert('Пароли не совпадают'))
-            // } else {
+            if (!nickname) {
+                reject(alert('Пожалуйста введите ваше имя'))
+            } else if (+nickname) {
+                reject(alert('Имя не может состоять из цифр'))
+            } else if (!email) {
+                reject(alert('Введите почту'))
+            } else if (!reg.test(email)) {
+                reject(alert('Почта некорректна'))
+            } else if (!password) {
+                reject(alert('Введите пароль'))
+            } else if (password.length < 8) {
+                reject(alert('Этот пароль слишкой короткий'))
+            } else if (password !== confirmPassword) {
+                reject(alert('Пароли не совпадают'))
+            } else {
             setDisabled(true)
             setHide()
-            // }
+            }
             resolve()
         })
         promise
