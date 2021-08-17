@@ -41,24 +41,24 @@ const Register = () => {
         const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
         let promise = new Promise((resolve, reject) => {
-            if (!nickname) {
-                reject(alert('Пожалуйста введите ваше имя'))
-            } else if (+nickname) {
-                reject(alert('Имя не может состоять из цифр'))
-            } else if (!email) {
-                reject(alert('Введите почту'))
-            } else if (!reg.test(email)) {
-                reject(alert('Почта некорректна'))
-            } else if (!password) {
-                reject(alert('Введите пароль'))
-            } else if (password.length < 8) {
-                reject(alert('Этот пароль слишкой короткий'))
-            } else if (password !== confirmPassword) {
-                reject(alert('Пароли не совпадают'))
-            } else {
+            // if (!nickname) {
+            //     reject(alert('Пожалуйста введите ваше имя'))
+            // } else if (+nickname) {
+            //     reject(alert('Имя не может состоять из цифр'))
+            // } else if (!email) {
+            //     reject(alert('Введите почту'))
+            // } else if (!reg.test(email)) {
+            //     reject(alert('Почта некорректна'))
+            // } else if (!password) {
+            //     reject(alert('Введите пароль'))
+            // } else if (password.length < 8) {
+            //     reject(alert('Этот пароль слишкой короткий'))
+            // } else if (password !== confirmPassword) {
+            //     reject(alert('Пароли не совпадают'))
+            // } else {
             setDisabled(true)
             setHide()
-            }
+            // }
             resolve()
         })
         promise
@@ -67,25 +67,23 @@ const Register = () => {
                     setTimeout(() => {
                         let DB = JSON.parse(localStorage.getItem('database'))
                         let duplicate = DB.users.find(user => user.email === email)
-
-                        if (duplicate) reject(alert('Данная почта занята'))
-                        else resolve({
+                        let user = {
                             name: nickname,
                             email: email,
                             password: password
-                        })
+                        }
+
+                        if (duplicate) reject(alert('Данная почта занята'))
+                        else {
+                            localStorage.setItem('database', JSON.stringify(user))
+                            DB.users.push(user)
+                            localStorage.setItem('database', JSON.stringify(DB))
+                            resolve()
+                        }
                     }, 3000);
                 })
             })
-            .then((data) => {
-                return new Promise(resolve => {
-                    let registerUsers = dataBase.users
-                    registerUsers.push(data)
-                    resolve(registerUsers)
-                })
-            })
-            .then((data) => {
-                localStorage.setItem('database', JSON.stringify({ users: data }))
+            .then(() => {
                 Clear()
             })
             .finally(() => {
@@ -102,7 +100,7 @@ const Register = () => {
     }
 
     // useEffect(() => {
-        
+
     // }, [])
 
     return (
