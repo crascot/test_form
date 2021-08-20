@@ -38,58 +38,49 @@ const Register = () => {
     }
 
     function Click() {
-        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-        let promise = new Promise((resolve, reject) => {
-            if (!nickname) {
-                reject(alert('Пожалуйста введите ваше имя'))
-            } else if (+nickname) {
-                reject(alert('Имя не может состоять из цифр'))
-            } else if (!email) {
-                reject(alert('Введите почту'))
-            } else if (!reg.test(email)) {
-                reject(alert('Почта некорректна'))
-            } else if (!password) {
-                reject(alert('Введите пароль'))
-            } else if (password.length < 8) {
-                reject(alert('Этот пароль слишкой короткий'))
-            } else if (password !== confirmPassword) {
-                reject(alert('Пароли не совпадают'))
-            } else {
-            setDisabled(true)
-            setHide()
+        return new Promise(() => {
+            const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            let DB = JSON.parse(localStorage.getItem('database'))
+            let duplicate = DB.users.find(user => user.email === email)
+            let user = {
+                name: nickname,
+                email: email,
+                password: password
             }
-            resolve()
-        })
-        promise
-            .then(() => {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        let DB = JSON.parse(localStorage.getItem('database'))
-                        let duplicate = DB.users.find(user => user.email === email)
-                        let user = {
-                            name: nickname,
-                            email: email,
-                            password: password
-                        }
 
-                        if (duplicate) reject(alert('Данная почта занята'))
-                        else {
-                            localStorage.setItem('database', JSON.stringify(user))
-                            DB.users.push(user)
-                            localStorage.setItem('database', JSON.stringify(DB))
-                            resolve()
-                        }
-                    }, 3000);
-                })
-            })
-            .then(() => {
-                Clear()
-            })
-            .finally(() => {
-                setDisabled(false)
-                setHide(classes.hide)
-            })
+            if (!nickname) {
+                alert('Пожалуйста введите ваше имя')
+            } else if (+nickname) {
+                alert('Имя не может состоять из цифр')
+            } else if (!email) {
+                alert('Введите почту')
+            } else if (!reg.test(email)) {
+                alert('Почта некорректна')
+            } else if (!password) {
+                alert('Введите пароль')
+            } else if (password.length < 8) {
+                alert('Этот пароль слишкой короткий')
+            } else if (password !== confirmPassword) {
+                alert('Пароли не совпадают')
+            } else {
+                setDisabled(true)
+                setHide()
+
+                setTimeout(() => {
+                    if (duplicate) (alert('Данная почта занята'))
+                    else {
+                        localStorage.setItem('database', JSON.stringify(user))
+                        DB.users.push(user)
+                        localStorage.setItem('database', JSON.stringify(DB))
+                        
+                        setDisabled(false)
+                        setHide(classes.hide)
+                        
+                        Clear()
+                    }
+                }, 3000);
+            }
+        })
     }
 
     function Clear() {
@@ -98,10 +89,6 @@ const Register = () => {
         setPassword('');
         setConfirmPassword('');
     }
-
-    // useEffect(() => {
-
-    // }, [])
 
     return (
         <Card className='form'>

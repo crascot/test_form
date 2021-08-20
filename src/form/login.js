@@ -31,7 +31,9 @@ const Login = () => {
   }
 
   function Click() {
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+      let DB = JSON.parse(localStorage.getItem('database'))
+
       if (!nickname) {
         reject(alert('Пожалуйста введите ваше имя'))
       } else if (+nickname) {
@@ -43,43 +45,27 @@ const Login = () => {
       } else {
         setDisabled(true)
         setHide()
+
+        setTimeout(() => {
+          DB.users.forEach(user => {
+            if (user.name === nickname && user.password === password) {
+              setRedirect('/main')
+              resolve(alert('Добро пожаловать'))
+            } else {
+              reject(alert('Данного пользователя не существует или вы неправильно ввели свой пароль'))
+            }
+            setDisabled(false)
+            setHide(classes.hide)
+          });
+        }, 3000);
       }
-      resolve()
     })
-    promise
-      .then(() => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            let DB = JSON.parse(localStorage.getItem('database'))
-            DB.users.forEach(user => {
-              if (user.name === nickname && user.password === password) {
-                resolve(alert('Добро пожаловать'))
-              } else {
-                reject(alert('Данного пользователя не существует или вы неправильно ввели свой пароль'))
-              }
-            });
-          }, 3000);
-        })
-      })
-      .then(() => {
-        setRedirect('/main')
-        Clear()
-      })
-      .finally(() => {
-        setDisabled(false)
-        setHide(classes.hide)
-      })
   }
 
   function Clear() {
     setNickname('');
     setPassword('');
   }
-
-  // useEffect(() => {
-  //   setNickname(localStorage.getItem('nickname'))
-  //   setPassword(localStorage.getItem('password'))
-  // }, [])
 
   return (
     <Card className='form'>
