@@ -41,21 +41,8 @@ const Register = () => {
         setDisabled(true);
         setHide(null);
         CheckIn(nickname, email, password, confirmPassword)
-            .then((user) => {
-                return new Promise((resolve, reject) => {
-                    let DB = JSON.parse(localStorage.getItem('database'))
-                    let duplicate = DB.users.find(user => user.email === email)
-
-                    if (duplicate) {
-                        reject(alert('Данная почта занята'))
-                    }
-                    else {
-                        localStorage.setItem('database', JSON.stringify(user))
-                        DB.users.push(user)
-                        localStorage.setItem('database', JSON.stringify(DB))
-                        resolve(Clear())
-                    }
-                })
+            .then(() => {
+                Clear()
             })
             .finally(() => {
                 setDisabled(false);

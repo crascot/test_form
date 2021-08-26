@@ -54,5 +54,20 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
                 resolve(user)
             }, 3000);
         }
+    }).then((user) => {
+        return new Promise((resolve, reject) => {
+            let DB = JSON.parse(localStorage.getItem('database'))
+            let duplicate = DB.users.find(user => user.email === userEmail)
+
+            if (duplicate) {
+                reject(alert('Данная почта занята'))
+            }
+            else {
+                localStorage.setItem('database', JSON.stringify(user))
+                DB.users.push(user)
+                localStorage.setItem('database', JSON.stringify(DB))
+                resolve()
+            }
+        })
     })
 }
