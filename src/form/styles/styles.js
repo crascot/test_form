@@ -22,7 +22,4 @@ export const useStyles = makeStyles({
       display: 'none',
       margin: 30,
     },
-    success: {
-      color: '#4caf50'
-    }
   })
