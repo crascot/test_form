@@ -69,5 +69,5 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
                 resolve()
             }
         })
-    })
+    }).catch(() => {})
 }

@@ -63,7 +63,7 @@ const Login = () => {
       </Grid>
       <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
         <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
-        <CircularProgress id='loader' className={hide} />
+        <CircularProgress id='loader' className={`${hide} + visible`} />
         <Button onClick={Clear} type='submit' disabled={disabled}>Очистить</Button>
       </Grid>
     </Card>
