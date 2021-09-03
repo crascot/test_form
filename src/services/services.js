@@ -69,5 +69,18 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
                 resolve()
             }
         })
-    }).catch(() => {})
+    })
+}
+
+export function FeedPush() {
+    let card = {
+        id: '1',
+        image: '',
+        title: 'Название',
+        description: 'Описание'
+    }
+
+    return new Promise((resolve, reject) => {
+        resolve(card)
+    })
 }
