@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import FeedCard from './feed-card';
-import card from './card-data';
 import { FeedPush } from '../services/services';
 
 
@@ -31,8 +30,8 @@ const Feed = () => {
 
     const handleSubmit = () => {
         FeedPush(id, image, title, description)
-            .then(() => {
-                return card.map(data => <FeedCard id={data.id} image={data.image} title={data.title} description={data.description} />)
+            .then((data) => {
+                return <FeedCard id={data.id} image={data.image} title={data.title} description={data.description} />
             })
     }
 
