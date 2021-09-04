@@ -5,7 +5,8 @@ import {
     Grid,
     Typography,
     CircularProgress,
-    TextField
+    TextField,
+    Container
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { useStyles } from './styles/styles';
@@ -43,7 +44,7 @@ const Register = () => {
         CheckIn(nickname, email, password, confirmPassword)
             .then(() => {
                 Clear()
-            })
+            }).catch(() => { })
             .finally(() => {
                 setDisabled(false);
                 setHide(classes.hide);
@@ -58,24 +59,26 @@ const Register = () => {
     }
 
     return (
-        <Card className='form'>
-            <Grid className='form-register head' container direction="row" justify="space-between">
-                <Typography variant='h5'>Зарегистриговаться</Typography>
-                <Typography variant='h5'>или</Typography>
-                <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
-            </Grid>
-            <Grid className={`form-register ${classes.body}`} container>
-                <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' />
-                <TextField label="Введите вашу почту" value={email} onChange={targetEmail} disabled={disabled} type='email' />
-                <TextField label="Придумайте пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' />
-                <TextField label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} disabled={disabled} type='password' />
-            </Grid>
-            <Grid className='form-register footer' container direction="row" justify="space-between">
-                <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' >Зарегистриговаться</Button >
-                <CircularProgress id='loader' className={hide} />
-                <Button onClick={Clear} disabled={disabled} >Очистить</Button>
-            </Grid>
-        </Card>
+        <Container maxWidth='sm'>
+            <Card className='form'>
+                <Grid className='form-register head' container direction="row" justify="space-between">
+                    <Typography variant='h5'>Зарегистриговаться</Typography>
+                    <Typography variant='h5'>или</Typography>
+                    <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
+                </Grid>
+                <Grid className={`form-register ${classes.body}`} container>
+                    <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' />
+                    <TextField label="Введите вашу почту" value={email} onChange={targetEmail} disabled={disabled} type='email' />
+                    <TextField label="Придумайте пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' />
+                    <TextField label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} disabled={disabled} type='password' />
+                </Grid>
+                <Grid className='form-register footer' container direction="row" justify="space-between">
+                    <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' >Зарегистриговаться</Button >
+                    <CircularProgress id='loader' className={hide} />
+                    <Button onClick={Clear} disabled={disabled} >Очистить</Button>
+                </Grid>
+            </Card>
+        </Container>
     )
 }
 
