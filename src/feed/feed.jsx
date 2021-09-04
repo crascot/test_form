@@ -3,6 +3,7 @@ import {
     Typography,
     Box,
 } from '@material-ui/core';
+import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import FeedCard from './feed-card';
 import { FeedPush } from '../services/services';
@@ -46,8 +47,7 @@ const Feed = () => {
             </Box>
         )
     } else {
-        console.error('auth_token not found');
-        return false
+        return Redirect('/')
     }
 }
 
