@@ -30,8 +30,8 @@ const Feed = () => {
 
     const handleSubmit = () => {
         FeedPush(id, image, title, description)
-            .then((data) => {
-                return <FeedCard id={data.id} image={data.image} title={data.title} description={data.description} />
+            .then((cards) => {
+                return cards.map(data => <FeedCard id={data.id} image={data.image} title={data.title} description={data.description} />)
             })
     }
 

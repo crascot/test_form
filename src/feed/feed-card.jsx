@@ -27,19 +27,19 @@ const FeedCard = (props) => {
     const classes = useStyles();
 
     return (
-        <Card className={classes.card}>
+        <Card className={classes.card} id={props.id}>
             <CardActionArea>
                 <CardMedia
                     className={classes.media}
-                    image={props.items.image}
+                    image={props.image}
                     title="Image"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {props.items.title}
+                        {props.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {props.items.description}
+                        {props.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>

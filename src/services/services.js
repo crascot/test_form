@@ -73,14 +73,13 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
 }
 
 export function FeedPush() {
-    let card = {
-        id: '1',
-        image: '',
-        title: 'Название',
-        description: 'Описание'
-    }
-
-    return new Promise((resolve, reject) => {
-        resolve(card)
-    })
+    let cards = [
+        {
+            id: '1',
+            image: '',
+            title: 'Название',
+            description: 'Описание'
+        }
+    ]
+    return cards
 }
