@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 const Form = () => {
   return (
     <Container>
-      <Router basename='/'>
+      <Router basename='/test_form'>
         <Route exact path='/' component={Login} />
         <Route exact path='/register' component={Register} />
         <Route exact path='/feed' component={Feed} />

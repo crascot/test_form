@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Typography,
     Box,
@@ -24,22 +24,18 @@ const useStyles = makeStyles({
 const Feed = () => {
     const classes = useStyles();
 
-    const [id, setId] = useState('')
-    const [image, setImage] = useState('')
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
+    const[cards, setCards] = useState([])
 
-    const handleSubmit = () => {
-        FeedPush(id, image, title, description)
-            .then((cards) => {
-                return cards.map(data => <FeedCard id={data.id} image={data.image} title={data.title} description={data.description} />)
-            })
-    }
+    FeedPush()
+    .then((data) => {
+        setCards(JSON.parse(data))
+    })
 
     if (localStorage.getItem('auth_token')) {
         return (
             <Box className={classes.header} display="flex" flexWrap="wrap" justifyContent="flex-start">
-                {handleSubmit}
+
+                {cards.map(card => <FeedCard id={card.id} title={card.title} body={card.body} />)}
 
                 <Box className={classes.footer}>
                     <Typography>footer</Typography>
