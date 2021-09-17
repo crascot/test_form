@@ -73,13 +73,9 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
 }
 
 export function FeedPush() {
-    let cards = [
-        {
-            id: '1',
-            image: '',
-            title: 'Название',
-            description: 'Описание'
-        }
-    ]
-    return cards
+    return new Promise((resolve) => {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then(response => response.json())
+            .then(json => resolve(JSON.stringify(json)))
+    })
 }

@@ -39,7 +39,7 @@ const FeedCard = (props) => {
                         {props.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {props.description}
+                        {props.body}
                     </Typography>
                 </CardContent>
             </CardActionArea>
