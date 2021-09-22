@@ -28,7 +28,7 @@ export function SignIn(userName, userPassword) {
 
 export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
     return new Promise((resolve, reject) => {
-        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
         let user = {
             name: userName,
             email: userEmail,
