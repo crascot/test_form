@@ -4,17 +4,19 @@ import Login from './login';
 import Register from './register';
 import Feed from '../feed/feed';
 import './form.scss';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 
 const Form = () => {
   return (
     <Container>
-      <Router basename='/test_form'>
-        <Route exact path='/' component={Login} />
-        <Route exact path='/register' component={Register} />
-        <Route exact path='/feed' component={Feed} />
-      </Router>
+      <BrowserRouter basename='/test_form'>
+        <Switch>
+          <Route path='/' exact component={Login} />
+          <Route path='/register' component={Register} />
+          <Route path='/feed' component={Feed} />
+        </Switch>
+      </BrowserRouter>
     </Container>
   )
 }
