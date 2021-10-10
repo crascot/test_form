@@ -46,7 +46,7 @@ const FeedCard = () => {
     const classes = useStyles();
 
     const [cards, setCards] = useState([])
-    const [cardId, setCardId] = useState()
+    const [, setCardId] = useState()
     const [currentPage, setCurrentPage] = useState(1)
 
     let cardsLength = 8
@@ -60,9 +60,9 @@ const FeedCard = () => {
             })
     }, [])
 
-    const deleteCard = (thisId) => {
-        setCardId(thisId)
-        setCards(cards.filter((el) => el.id !== cardId))
+    const deleteCard = id => {
+        setCardId(id)
+        setCards(cards.filter((el) => el.id !== id))
     }
 
     const paginate = pageNumber => setCurrentPage(pageNumber)
@@ -97,4 +97,3 @@ const FeedCard = () => {
 }
 
 export default FeedCard;
-
