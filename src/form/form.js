@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container } from '@material-ui/core';
 import Login from './login';
 import Register from './register';
 import Feed from '../feed/feed';
@@ -9,7 +8,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const Form = () => {
   return (
-    <Container>
+    <div style={{ margin: -8 }}>
       <BrowserRouter basename='/test_form'>
         <Switch>
           <Route path='/' exact component={Login} />
@@ -17,7 +16,7 @@ const Form = () => {
           <Route path='/feed' component={Feed} />
         </Switch>
       </BrowserRouter>
-    </Container>
+    </div>
   )
 }
 
