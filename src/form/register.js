@@ -38,38 +38,39 @@ const Register = () => {
 
     const [click, setClick] = useState(false)
 
+    const checkName = error => text => {
+        setErrorName(error)
+        setHelperTextName(text)
+    }
+    const checkEmail = error => text => {
+        setErrorEmail(error)
+        setHelperTextEmail(text)
+    }
+    const checkPassword = error => text => {
+        setErrorPassword(error)
+        setHelperTextPassword(text)
+    }
+    const checkConfirmPassword = error => text => {
+        setErrorConfirmPassword(error)
+        setHelperTextConfirmPassword(text)
+    }
+
     useEffect(() => {
         const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
         if (click === true) {
-            if (!nickname || +nickname) {
-                setErrorName(true)
-                setHelperTextName('Некорректное имя')
-            } else {
-                setErrorName(false)
-                setHelperTextName('')
-            }
-            if (!email || !reg.test(email)) {
-                setErrorEmail(true)
-                setHelperTextEmail('Почта некорректна')
-            } else {
-                setErrorEmail(false)
-                setHelperTextEmail('')
-            }
-            if (password.length < 8) {
-                setErrorPassword(true)
-                setHelperTextPassword('Пароль слишкой короткий')
-            } else {
-                setErrorPassword(false)
-                setHelperTextPassword('')
-            }
-            if(password !== confirmPassword) {
-                setErrorConfirmPassword(true)
-                setHelperTextConfirmPassword('Пароли не совпадают')
-            } else {
-                setErrorConfirmPassword(false)
-                setHelperTextConfirmPassword('')
-            }
+            if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
+            else if (+nickname) checkName(true)('Имя не может состоять из цифр')
+            else checkName()()
+
+            if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
+            else checkEmail()()
+
+            if (password.length < 8) checkPassword(true)('Пароль слишкой короткий')
+            else checkPassword()()
+
+            if (password !== confirmPassword) checkConfirmPassword(true)('Пароли не совпадают')
+            else checkConfirmPassword()()
         }
     }, [nickname, email, password, confirmPassword, click])
 
@@ -82,15 +83,19 @@ const Register = () => {
                 localStorage.setItem('auth_token', true)
                 setRedirect('/feed')
             }).catch((props) => {
-                if (props === nickname) {
-                    setHelperTextName('Некорректное имя')
-                }
-                if (props === email) {
-                    setHelperTextEmail('Почта некорректна')
-                }
-                if (props === password && props !== confirmPassword) {
-                    setHelperTextPassword('Пароль слишкой короткий')
-                    setHelperTextConfirmPassword('Пароли не совпадают')
+                switch (props) {
+                    case nickname:
+                        if (nickname === 0) checkName()('Пожалуйста введите ваше имя')
+                        else checkName()('Имя не может состоять из цифр')
+                        break;
+                    case email:
+                        checkEmail()('Почта некорректна')
+                        break;
+                    case password:
+                        if (password !== confirmPassword) {
+                            checkPassword()('Пароль слишкой короткий')
+                            checkConfirmPassword()('Пароли не совпадают')
+                        }
                 }
             })
             .finally(() => {

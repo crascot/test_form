@@ -32,25 +32,23 @@ const Login = () => {
 
   const [click, setClick] = useState(false)
 
+  const checkName = error => text => {
+    setErrorName(error)
+    setHelperTextName(text)
+  }
+  const checkPassword = error => text => {
+    setErrorPassword(error)
+    setHelperTextPassword(text)
+  }
+
   useEffect(() => {
     if (click === true) {
-      if (!nickname) {
-        setErrorName(true)
-        setHelperTextName('Пожалуйста введите ваше имя')
-      } else if (+nickname) {
-        setErrorName(true)
-        setHelperTextName('Имя не может состоять из цифр')
-      } else {
-        setErrorName(false)
-        setHelperTextName('')
-      }
-      if (password.length < 8) {
-        setErrorPassword(true)
-        setHelperTextPassword('Пароль слишкой короткий')
-      } else {
-        setErrorPassword(false)
-        setHelperTextPassword('')
-      }
+      if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
+      else if (+nickname) checkName(true)('Имя не может состоять из цифр')
+      else checkName()()
+
+      if (password.length < 8) checkPassword(true)('Пароль слишкой короткий')
+      else checkPassword()()
     }
   }, [nickname, password, click])
 
@@ -63,12 +61,14 @@ const Login = () => {
         localStorage.setItem('auth_token', true)
         setRedirect('/feed')
       }).catch((props) => {
-        if (props === nickname) {
-          if (props === 0) setHelperTextName('Пожалуйста введите ваше имя')
-          else setHelperTextName('Имя не может состоять из цифр')
-        }
-        if (props === password) {
-          setHelperTextPassword('Пароль слишкой короткий')
+        switch (props) {
+          case nickname:
+            if (nickname === 0) checkName()('Пожалуйста введите ваше имя')
+            else checkName()('Имя не может состоять из цифр')
+            break;
+          case password:
+            checkPassword('Пароль слишкой короткий')
+            break;
         }
       })
       .finally(() => {

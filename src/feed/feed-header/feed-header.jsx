@@ -5,17 +5,14 @@ import {
     Typography,
     Avatar,
 } from '@material-ui/core';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const useStyles = makeStyles({
     block: {
         width: '100%',
         display: 'flex',
+        flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#0dcaf0',
@@ -35,12 +32,19 @@ const FeedHeader = () => {
     const classes = useStyles();
     return (
         <Box className={classes.block}>
-            <Typography>Test-Form</Typography>
-            <div className={classes.center}>
-                <Link to={'/'}><Typography>Посты</Typography></Link>
-                <Link to={'/register'}><Typography>Страны</Typography></Link>
-                <Link to={'/'}><Typography>Напитки</Typography></Link>
+
+            <div style={{ width: '100%' }}>
+                <Alert severity="warning" style={{ width: 'max-content', margin: '0 auto' }}>Данная часть в разработке</Alert>
             </div>
+
+            <Typography>Test-Form</Typography>
+            <Router>
+                <div className={classes.center}>
+                    <Link to={'/feed'}><Typography>Посты</Typography></Link>
+                    <Link to={'/countries'}><Typography>Страны</Typography></Link>
+                    <Link to={'/drinks'}><Typography>Напитки</Typography></Link>
+                </div>
+            </Router>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </Box>
     )
