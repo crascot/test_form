@@ -3,14 +3,10 @@ export function SignIn(userName, userPassword) {
     let DB = JSON.parse(localStorage.getItem('database'))
 
     return new Promise((resolve, reject) => {
-        if (!userName) {
-            reject(alert('Пожалуйста введите ваше имя'))
-        } else if (+userName) {
-            reject(alert('Имя не может состоять из цифр'))
-        } else if (!userPassword) {
-            reject(alert('Введите пароль'))
-        } else if (userPassword.length < 8) {
-            reject(alert('Этот пароль слишкой короткий'))
+        if (!userName || +userName) {
+            reject(userName)
+        } else if (!userPassword || userPassword.length < 8) {
+            reject(userPassword)
         } else {
             setTimeout(() => {
                 let findUser = DB.users.find(user => user.name === userName && user.password === userPassword)
@@ -35,20 +31,14 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
             password: userPassword
         }
 
-        if (!userName) {
-            reject(alert('Пожалуйста введите ваше имя'))
-        } else if (+userName) {
-            reject(alert('Имя не может состоять из цифр'))
-        } else if (!userEmail) {
-            reject(alert('Введите почту'))
-        } else if (!reg.test(userEmail)) {
-            reject(alert('Почта некорректна'))
-        } else if (!userPassword) {
-            reject(alert('Введите пароль'))
-        } else if (userPassword.length < 8) {
-            reject(alert('Этот пароль слишкой короткий'))
+        if (!userName || +userName) {
+            reject(userName)
+        } else if (!userEmail || !reg.test(userEmail)) {
+            reject(userEmail)
+        } else if (!userPassword || userPassword.length < 8) {
+            reject(userPassword)
         } else if (userPassword !== confirmPassword) {
-            reject(alert('Пароли не совпадают'))
+            reject(confirmPassword)
         } else {
             setTimeout(() => {
                 resolve(user)

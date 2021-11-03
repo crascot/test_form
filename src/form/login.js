@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Grid,
@@ -25,14 +25,52 @@ const Login = () => {
 
   const [redirect, setRedirect] = useState('')
 
+  const [errorName, setErrorName] = useState(false)
+  const [errorPassword, setErrorPassword] = useState(false)
+  const [helperTextName, setHelperTextName] = useState('')
+  const [helperTextPassword, setHelperTextPassword] = useState('')
+
+  const [click, setClick] = useState(false)
+
+  const checkName = error => text => {
+    setErrorName(error)
+    setHelperTextName(text)
+  }
+  const checkPassword = error => text => {
+    setErrorPassword(error)
+    setHelperTextPassword(text)
+  }
+
+  useEffect(() => {
+    if (click === true) {
+      if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
+      else if (+nickname) checkName(true)('Имя не может состоять из цифр')
+      else checkName()()
+
+      if (password.length < 8) checkPassword(true)('Пароль слишкой короткий')
+      else checkPassword()()
+    }
+  }, [nickname, password, click])
+
   const handleSubmit = () => {
+    setClick(true);
     setDisabled(true);
     setHide(null);
     SignIn(nickname, password)
       .then(() => {
         localStorage.setItem('auth_token', true)
         setRedirect('/feed')
-      }).catch(() => { })
+      }).catch((props) => {
+        switch (props) {
+          case nickname:
+            if (nickname === 0) checkName()('Пожалуйста введите ваше имя')
+            else checkName()('Имя не может состоять из цифр')
+            break;
+          case password:
+            checkPassword('Пароль слишкой короткий')
+            break;
+        }
+      })
       .finally(() => {
         setDisabled(false);
         setHide(classes.hide);
@@ -60,8 +98,8 @@ const Login = () => {
           <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/register'>Зарегистриговаться</Link></Button>
         </Grid>
         <Grid className={`form-register ${classes.body}`} container>
-          <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' />
-          <TextField label="Введите пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' />
+          <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' error={errorName} helperText={helperTextName} />
+          <TextField label="Введите пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' error={errorPassword} helperText={helperTextPassword} />
         </Grid>
         <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
           <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
