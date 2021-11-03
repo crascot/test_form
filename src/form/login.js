@@ -13,23 +13,19 @@ import { useStyles } from './styles/styles';
 import { SignIn } from '../services/services';
 
 
-const Login = () => {
+const Login = ({
+  nickname, setNickname,
+  password, setPassword,
+  disabled, setDisabled,
+  errorName, setErrorName,
+  errorPassword, setErrorPassword,
+  helperTextName, setHelperTextName,
+  helperTextPassword, setHelperTextPassword }) => {
 
   const classes = useStyles()
 
-  const [nickname, setNickname] = useState('')
-  const [password, setPassword] = useState('')
-
-  const [disabled, setDisabled] = useState(false)
   const [hide, setHide] = useState(classes.hide)
-
   const [redirect, setRedirect] = useState('')
-
-  const [errorName, setErrorName] = useState(false)
-  const [errorPassword, setErrorPassword] = useState(false)
-  const [helperTextName, setHelperTextName] = useState('')
-  const [helperTextPassword, setHelperTextPassword] = useState('')
-
   const [click, setClick] = useState(false)
 
   const checkName = error => text => {

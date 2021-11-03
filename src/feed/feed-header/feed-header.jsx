@@ -38,9 +38,9 @@ const FeedHeader = () => {
             </div>
 
             <Typography>Test-Form</Typography>
-            <Router>
+            <Router basename='/feed'>
                 <div className={classes.center}>
-                    <Link to={'/feed'}><Typography>Посты</Typography></Link>
+                    <Link to={'/posts'}><Typography>Посты</Typography></Link>
                     <Link to={'/countries'}><Typography>Страны</Typography></Link>
                     <Link to={'/drinks'}><Typography>Напитки</Typography></Link>
                 </div>

@@ -13,28 +13,26 @@ import { useStyles } from './styles/styles';
 import { CheckIn } from '../services/services';
 
 
-const Register = () => {
+const Register = ({
+    nickname, setNickname,
+    email, setEmail,
+    password, setPassword,
+    confirmPassword, setConfirmPassword,
+    disabled, setDisabled,
+    errorName, setErrorName,
+    errorEmail, setErrorEmail,
+    errorPassword, setErrorPassword,
+    errorConfirmPassword, setErrorConfirmPassword,
+    helperTextName, setHelperTextName,
+    helperTextEmail, setHelperTextEmail,
+    helperTextPassword, setHelperTextPassword,
+    helperConfirmPassword, setHelperTextConfirmPassword
+}) => {
 
     const classes = useStyles()
 
-    const [nickname, setNickname] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-
-    const [disabled, setDisabled] = useState(false)
     const [hide, setHide] = useState(classes.hide)
-
     const [redirect, setRedirect] = useState('/register')
-
-    const [errorName, setErrorName] = useState(false)
-    const [errorEmail, setErrorEmail] = useState(false)
-    const [errorPassword, setErrorPassword] = useState(false)
-    const [errorConfirmPassword, setErrorConfirmPassword] = useState(false)
-    const [helperTextName, setHelperTextName] = useState('')
-    const [helperTextEmail, setHelperTextEmail] = useState('')
-    const [helperTextPassword, setHelperTextPassword] = useState('')
-    const [helperConfirmPassword, setHelperTextConfirmPassword] = useState('')
 
     const [click, setClick] = useState(false)
 
