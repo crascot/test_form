@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Box,
@@ -11,7 +11,7 @@ import {
     Menu,
     MenuItem
 } from '@mui/material';
-import { BrowserRouter as Router, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const useStyles = makeStyles({
     block: {
@@ -44,8 +44,7 @@ const FeedHeader = ({ setToken }) => {
     }
     const handleClose = () => {
         setAnchorEl(null)
-        setToken(null)
-        localStorage.removeItem('auth_token')
+        setToken(localStorage.removeItem('auth_token'))
     }
 
     return (
