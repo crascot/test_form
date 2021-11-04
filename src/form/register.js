@@ -14,44 +14,23 @@ import { CheckIn } from '../services/services';
 
 
 const Register = ({
-    nickname, setNickname,
-    email, setEmail,
-    password, setPassword,
-    confirmPassword, setConfirmPassword,
+    nickname, targetName,
+    email, targetEmail,
+    password, targetPassword,
+    confirmPassword, targetConfirmPassword,
     disabled, setDisabled,
-    errorName, setErrorName,
-    errorEmail, setErrorEmail,
-    errorPassword, setErrorPassword,
-    errorConfirmPassword, setErrorConfirmPassword,
-    helperTextName, setHelperTextName,
-    helperTextEmail, setHelperTextEmail,
-    helperTextPassword, setHelperTextPassword,
-    helperConfirmPassword, setHelperTextConfirmPassword
-}) => {
+    errorName, errorEmail,
+    errorPassword, errorConfirmPassword,
+    helperTextName, helperTextEmail,
+    helperTextPassword, helperConfirmPassword,
+    checkName, checkEmail, checkPassword, checkConfirmPassword,
+    clear, clearType }) => {
 
     const classes = useStyles()
 
     const [hide, setHide] = useState(classes.hide)
     const [redirect, setRedirect] = useState('/register')
-
     const [click, setClick] = useState(false)
-
-    const checkName = error => text => {
-        setErrorName(error)
-        setHelperTextName(text)
-    }
-    const checkEmail = error => text => {
-        setErrorEmail(error)
-        setHelperTextEmail(text)
-    }
-    const checkPassword = error => text => {
-        setErrorPassword(error)
-        setHelperTextPassword(text)
-    }
-    const checkConfirmPassword = error => text => {
-        setErrorConfirmPassword(error)
-        setHelperTextConfirmPassword(text)
-    }
 
     useEffect(() => {
         const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
@@ -70,7 +49,7 @@ const Register = ({
             if (password !== confirmPassword) checkConfirmPassword(true)('Пароли не совпадают')
             else checkConfirmPassword()()
         }
-    }, [nickname, email, password, confirmPassword, click])
+    })
 
     const handleSubmit = () => {
         setClick(true);
@@ -80,20 +59,22 @@ const Register = ({
             .then(() => {
                 localStorage.setItem('auth_token', true)
                 setRedirect('/feed')
+                clear()
             }).catch((props) => {
                 switch (props) {
                     case nickname:
-                        if (nickname === 0) checkName()('Пожалуйста введите ваше имя')
-                        else checkName()('Имя не может состоять из цифр')
+                        if (nickname === 0) checkName(true)('Пожалуйста введите ваше имя')
                         break;
                     case email:
                         checkEmail()('Почта некорректна')
                         break;
                     case password:
                         if (password !== confirmPassword) {
-                            checkPassword()('Пароль слишкой короткий')
-                            checkConfirmPassword()('Пароли не совпадают')
+                            checkPassword(true)('Пароль слишкой короткий')
+                            checkConfirmPassword(true)('Пароли не совпадают')
                         }
+
+                    // no default
                 }
             })
             .finally(() => {
@@ -102,33 +83,13 @@ const Register = ({
             })
     }
 
-    function targetName(event) {
-        setNickname(event.target.value)
-    }
-    function targetEmail(event) {
-        setEmail(event.target.value)
-    }
-    function targetPassword(event) {
-        setPassword(event.target.value)
-    }
-    function targetConfirmPassword(event) {
-        setConfirmPassword(event.target.value)
-    }
-
-    function Clear() {
-        setNickname('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-    }
-
     return (
         <Container maxWidth='sm'>
             <Card className='form'>
                 <Grid className='form-register head' container direction="row" justify="space-between">
                     <Typography variant='h5'>Зарегистриговаться</Typography>
                     <Typography variant='h5'>или</Typography>
-                    <Button className={classes.register} disabled={disabled} variant="outlined" color="primary"><Link to='/'>Войти</Link></Button>
+                    <Link to='/' onClick={clear} style={{ textDecoration: 'none' }}><Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">Войти</Button></Link>
                 </Grid>
                 <Grid className={`form-register ${classes.body}`} container>
                     <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' error={errorName} helperText={helperTextName} />
@@ -139,7 +100,7 @@ const Register = ({
                 <Grid className='form-register footer' container direction="row" justify="space-between">
                     <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' ><Redirect to={redirect} />Зарегистриговаться</Button >
                     <CircularProgress id='loader' className={hide} />
-                    <Button onClick={Clear} disabled={disabled} >Очистить</Button>
+                    <Button onClick={clear} disabled={disabled} >Очистить</Button>
                 </Grid>
             </Card>
         </Container>
