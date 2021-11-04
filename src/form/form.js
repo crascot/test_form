@@ -24,36 +24,78 @@ const Form = () => {
   const [helperTextPassword, setHelperTextPassword] = useState('')
   const [helperConfirmPassword, setHelperTextConfirmPassword] = useState('')
 
+  function targetName(event) {
+    setNickname(event.target.value)
+  }
+  function targetEmail(event) {
+    setEmail(event.target.value)
+  }
+  function targetPassword(event) {
+    setPassword(event.target.value)
+  }
+  function targetConfirmPassword(event) {
+    setConfirmPassword(event.target.value)
+  }
+
+  const checkName = error => text => {
+    setErrorName(error)
+    setHelperTextName(text)
+  }
+  const checkEmail = error => text => {
+    setErrorEmail(error)
+    setHelperTextEmail(text)
+  }
+  const checkPassword = error => text => {
+    setErrorPassword(error)
+    setHelperTextPassword(text)
+  }
+  const checkConfirmPassword = error => text => {
+    setErrorConfirmPassword(error)
+    setHelperTextConfirmPassword(text)
+  }
+
+  const clearType = () => {
+    checkName()()
+    checkEmail()()
+    checkPassword()()
+    checkConfirmPassword()()
+  }
+  const clear = () => {
+    setNickname('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  }
+
   return (
     <div style={{ margin: -8 }}>
       <BrowserRouter basename='/test_form'>
         <Switch>
           <Route path='/' exact >
             <Login
-              nickname={nickname} setNickname={setNickname}
-              password={password} setPassword={setPassword}
+              nickname={nickname} targetName={targetName}
+              password={password} targetPassword={targetPassword}
               disabled={disabled} setDisabled={setDisabled}
-              errorName={errorName} setErrorName={setErrorName}
-              errorPassword={errorPassword} setErrorPassword={setErrorPassword}
-              helperTextName={helperTextName} setHelperTextName={setHelperTextName}
-              helperTextPassword={helperTextPassword} setHelperTextPassword={setHelperTextPassword}
+              errorName={errorName} errorPassword={errorPassword}
+              helperTextName={helperTextName} helperTextPassword={helperTextPassword}
+              checkName={checkName} checkPassword={checkPassword}
+              clear={clear} clearType={clearType}
             />
           </Route>
           <Route path='/register' >
             <Register
-              nickname={nickname} setNickname={setNickname}
-              email={email} setEmail={setEmail}
-              password={password} setPassword={setPassword}
-              confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}
+              nickname={nickname} targetName={targetName}
+              email={email} targetEmail={targetEmail}
+              password={password} targetPassword={targetPassword}
+              confirmPassword={confirmPassword} targetConfirmPassword={targetConfirmPassword}
               disabled={disabled} setDisabled={setDisabled}
-              errorName={errorName} setErrorName={setErrorName}
-              errorEmail={errorEmail} setErrorEmail={setErrorEmail}
-              errorPassword={errorPassword} setErrorPassword={setErrorPassword}
-              errorConfirmPassword={errorConfirmPassword} setErrorConfirmPassword={setErrorConfirmPassword}
-              helperTextName={helperTextName} setHelperTextName={setHelperTextName}
-              helperTextEmail={helperTextEmail} setHelperTextEmail={setHelperTextEmail}
-              helperTextPassword={helperTextPassword} setHelperTextPassword={setHelperTextPassword}
-              helperConfirmPassword={helperConfirmPassword} setHelperTextConfirmPassword={setHelperTextConfirmPassword}
+              errorName={errorName} errorEmail={errorEmail}
+              errorPassword={errorPassword} errorConfirmPassword={errorConfirmPassword}
+              helperTextName={helperTextName} helperTextEmail={helperTextEmail}
+              helperTextPassword={helperTextPassword} helperConfirmPassword={helperConfirmPassword}
+              checkName={checkName} checkEmail={checkEmail}
+              checkPassword={checkPassword} checkConfirmPassword={checkConfirmPassword}
+              clear={clear} clearType={clearType}
             />
           </Route>
           <Route path='/feed' component={Feed} />

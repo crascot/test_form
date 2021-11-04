@@ -27,6 +27,7 @@ const Feed = () => {
     const classes = useStyles();
 
     const [cards, setCards] = useState([])
+    const [token, setToken] = useState(localStorage.getItem('auth_token'))
     useEffect(() => {
         FeedPush()
             .then((data) => {
@@ -34,19 +35,17 @@ const Feed = () => {
             })
     }, [])
 
-    if (localStorage.getItem('auth_token')) {
+    if (token) {
         return (
             <Box display="flex" flexWrap="wrap" justifyContent="flex-start">
-                <FeedHeader />
+                <FeedHeader setToken={setToken} />
                 <Container>
                     <FeedCard cards={cards} setCards={setCards} />
                     <Box className={classes.footer}><Typography>footer</Typography></Box>
                 </Container>
             </Box>
         )
-    } else {
-        return Redirect('/')
-    }
+    } else return Redirect('/')
 }
 
 export default Feed;

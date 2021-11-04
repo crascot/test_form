@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Box,
     Typography,
-    Avatar,
+    Button,
+    TextField
 } from '@material-ui/core';
-import Alert from '@mui/material/Alert';
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import {
+    Alert,
+    Menu,
+    MenuItem
+} from '@mui/material';
+import { BrowserRouter as Router, Link, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles({
     block: {
@@ -28,8 +33,21 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = () => {
+const FeedHeader = ({ setToken }) => {
     const classes = useStyles();
+
+    const [anchorEl, setAnchorEl] = useState(null)
+
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+    const handleClose = () => {
+        setAnchorEl(null)
+        setToken(null)
+        localStorage.removeItem('auth_token')
+    }
+
     return (
         <Box className={classes.block}>
 
@@ -37,7 +55,7 @@ const FeedHeader = () => {
                 <Alert severity="warning" style={{ width: 'max-content', margin: '0 auto' }}>Данная часть в разработке</Alert>
             </div>
 
-            <Typography>Test-Form</Typography>
+            <Typography variant="h4">Test-Form</Typography>
             <Router basename='/feed'>
                 <div className={classes.center}>
                     <Link to={'/posts'}><Typography>Посты</Typography></Link>
@@ -45,7 +63,30 @@ const FeedHeader = () => {
                     <Link to={'/drinks'}><Typography>Напитки</Typography></Link>
                 </div>
             </Router>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+            <div>
+                <Button
+                    style={{ textTransform: 'capitalize' }}
+                    id="basic-button"
+                    aria-controls="basic-menu"
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                >
+                    <Typography variant="body1">Имя пользователя</Typography>
+                </Button>
+                <Menu
+                    style={{ textAlign: 'center' }}
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    <MenuItem onClick={handleClose}>Выйти</MenuItem>
+                </Menu>
+            </div>
         </Box>
     )
 }
