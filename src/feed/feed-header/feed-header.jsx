@@ -4,14 +4,12 @@ import {
     Box,
     Typography,
     Button,
-    TextField
+    TextField,
 } from '@material-ui/core';
 import {
-    Alert,
     Menu,
     MenuItem
 } from '@mui/material';
-import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const useStyles = makeStyles({
     block: {
@@ -30,38 +28,31 @@ const useStyles = makeStyles({
         justifyContent: 'space-between',
         width: '30%',
         textAlign: 'center'
+    },
+    name: {
+        fontSize: 25
     }
 });
 
-const FeedHeader = ({ setToken }) => {
+const FeedHeader = ({ setToken, nickname, search, setSearch }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
+    const [feedName] = useState(nickname)
 
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleClose = () => {
-        setAnchorEl(null)
-        setToken(localStorage.removeItem('auth_token'))
-    }
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event) => setAnchorEl(event.currentTarget)
+    const handleClose = () => setAnchorEl(null)
+    const leave = () => setToken(localStorage.removeItem('auth_token'))
 
     return (
         <Box className={classes.block}>
 
-            <div style={{ width: '100%' }}>
-                <Alert severity="warning" style={{ width: 'max-content', margin: '0 auto' }}>Данная часть в разработке</Alert>
-            </div>
-
             <Typography variant="h4">Test-Form</Typography>
-            <Router basename='/feed'>
-                <div className={classes.center}>
-                    <Link to={'/posts'}><Typography>Посты</Typography></Link>
-                    <Link to={'/countries'}><Typography>Страны</Typography></Link>
-                    <Link to={'/drinks'}><Typography>Напитки</Typography></Link>
-                </div>
-            </Router>
+            <div className={classes.center}>
+                <TextField label="Пойск..." value={search} onChange={(event) => setSearch(event.target.value)} />
+            </div>
             <div>
                 <Button
                     style={{ textTransform: 'capitalize' }}
@@ -71,10 +62,11 @@ const FeedHeader = ({ setToken }) => {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
                 >
-                    <Typography variant="body1">Имя пользователя</Typography>
+                    <Typography variant="body1" className={classes.name}>
+                        {feedName}
+                    </Typography>
                 </Button>
                 <Menu
-                    style={{ textAlign: 'center' }}
                     id="basic-menu"
                     anchorEl={anchorEl}
                     open={open}
@@ -83,7 +75,7 @@ const FeedHeader = ({ setToken }) => {
                         'aria-labelledby': 'basic-button',
                     }}
                 >
-                    <MenuItem onClick={handleClose}>Выйти</MenuItem>
+                    <MenuItem onClick={leave}>Выйти</MenuItem>
                 </Menu>
             </div>
         </Box>
