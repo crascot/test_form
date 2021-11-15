@@ -24,6 +24,9 @@ const useStyles = makeStyles({
         marginTop: '2rem',
         margin: '0 14px',
     },
+    noCards: {
+        marginTop: 20,
+    },
     icon: {
         marginTop: '9px',
         marginLeft: '88%',
@@ -46,7 +49,7 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedCard = ({ cards, setCards }) => {
+const FeedCard = ({ cards, setCards, findCards }) => {
     const classes = useStyles();
 
     const [edit, setEdit] = useState(null)
@@ -58,9 +61,8 @@ const FeedCard = ({ cards, setCards }) => {
     const lastCardIndex = currentPage * cardsLength
     const firstCardsIndex = lastCardIndex - cardsLength
 
-    const deleteCard = (id) => {
-        setCards(cards.filter((el) => el.id !== id))
-    }
+    const deleteCard = (id) => setCards(cards.filter((el) => el.id !== id))
+
     const editCard = (id, title, body) => {
         setEdit(id)
         setValueTitle(title)
@@ -83,53 +85,59 @@ const FeedCard = ({ cards, setCards }) => {
     return (
         <Box className={classes.block}>
             {
-                cards.map((props) => (
-                    <Card className={classes.card} id={props.id} key={props.id}>
-                        <HighlightOff className={classes.icon} onClick={() => deleteCard(props.id)} />
-                        <CardContent>
-                            <div>
-                                {
-                                    edit === props.id ? <div>
-                                        <TextField value={valueTitle} onChange={(e) => setValueTitle(e.target.value)} fullWidth multiline />
+                cards.length === 0 ?
+                    <Typography variant="h3" className={classes.noCards}>Посты закончились</Typography>
+                    :
+                    findCards.length === 0 ?
+                        <Typography variant="h3" className={classes.noCards}>Пост не найден</Typography>
+                        :
+                        findCards.map((props) => (
+                            <Card className={classes.card} id={props.id} key={props.id}>
+                                <HighlightOff className={classes.icon} onClick={() => deleteCard(props.id)} />
+                                <CardContent>
+                                    <div>
+                                        {
+                                            edit === props.id ? <div>
+                                                <TextField value={valueTitle} onChange={(e) => setValueTitle(e.target.value)} fullWidth multiline />
+                                            </div>
+                                                :
+                                                <Typography
+                                                    gutterBottom variant="h5"
+                                                    component="h2"
+                                                >
+                                                    {props.title}
+                                                </Typography>
+                                        }
                                     </div>
-                                        :
-                                        <Typography
-                                            gutterBottom variant="h5"
-                                            component="h2"
-                                        >
-                                            {props.title}
-                                        </Typography>
-                                }
-                            </div>
-                            <div className={classes.body}>
-                                {
-                                    edit === props.id ? <div>
-                                        <TextField value={valueBody} onChange={(e) => setValueBody(e.target.value)} fullWidth multiline />
+                                    <div className={classes.body}>
+                                        {
+                                            edit === props.id ? <div>
+                                                <TextField value={valueBody} onChange={(e) => setValueBody(e.target.value)} fullWidth multiline />
+                                            </div>
+                                                :
+                                                <Typography variant="body2"
+                                                    color="textSecondary"
+                                                    component="p"
+                                                >
+                                                    {props.body}
+                                                </Typography>
+                                        }
                                     </div>
-                                        :
-                                        <Typography variant="body2"
-                                            color="textSecondary"
-                                            component="p"
-                                        >
-                                            {props.body}
-                                        </Typography>
-                                }
-                            </div>
-                            <Typography className={classes.save} variant="button">
-                                {
-                                    edit === props.id ?
-                                        <Button onClick={() => saveCard(props.id)} size='small'>Сохранить</Button>
-                                        :
-                                        <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать</Button>
-                                }
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                )).slice(firstCardsIndex, lastCardIndex)
+                                    <Typography className={classes.save} variant="button">
+                                        {
+                                            edit === props.id ?
+                                                <Button onClick={() => saveCard(props.id)} size='small'>Сохранить</Button>
+                                                :
+                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать {props.id}</Button>
+                                        }
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        )).slice(firstCardsIndex, lastCardIndex)
             }
             <Pagination
                 cardsLength={cardsLength}
-                totalCards={cards.length}
+                totalCards={findCards.length}
                 paginate={paginate}
             />
         </Box>

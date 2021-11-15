@@ -24,18 +24,10 @@ const Form = () => {
   const [helperTextPassword, setHelperTextPassword] = useState('')
   const [helperConfirmPassword, setHelperTextConfirmPassword] = useState('')
 
-  function targetName(event) {
-    setNickname(event.target.value)
-  }
-  function targetEmail(event) {
-    setEmail(event.target.value)
-  }
-  function targetPassword(event) {
-    setPassword(event.target.value)
-  }
-  function targetConfirmPassword(event) {
-    setConfirmPassword(event.target.value)
-  }
+  const targetName = (event)  => setNickname(event.target.value)
+  const targetEmail = (event) => setEmail(event.target.value)
+  const targetPassword = (event) => setPassword(event.target.value)
+  const targetConfirmPassword = (event) => setConfirmPassword(event.target.value)
 
   const checkName = error => text => {
     setErrorName(error)
@@ -71,7 +63,7 @@ const Form = () => {
     <div style={{ margin: -8 }}>
       <BrowserRouter basename='/test_form'>
         <Switch>
-          <Route path='/' exact >
+          <Route path='/' exact>
             <Login
               nickname={nickname} targetName={targetName}
               password={password} targetPassword={targetPassword}
@@ -82,7 +74,7 @@ const Form = () => {
               clear={clear} clearType={clearType}
             />
           </Route>
-          <Route path='/register' >
+          <Route path='/register'>
             <Register
               nickname={nickname} targetName={targetName}
               email={email} targetEmail={targetEmail}
@@ -98,7 +90,7 @@ const Form = () => {
               clear={clear} clearType={clearType}
             />
           </Route>
-          <Route path='/feed' component={Feed} />
+          <Route path='/feed'><Feed nickname={nickname} /></Route>
         </Switch>
       </BrowserRouter>
     </div>
