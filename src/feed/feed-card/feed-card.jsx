@@ -128,7 +128,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
                                             edit === props.id ?
                                                 <Button onClick={() => saveCard(props.id)} size='small'>Сохранить</Button>
                                                 :
-                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать {props.id}</Button>
+                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать</Button>
                                         }
                                     </Typography>
                                 </CardContent>

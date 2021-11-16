@@ -42,12 +42,12 @@ const FeedCard = ({ cards, setCards }) => {
         if (titleText.trim() && bodyText.trim()) {
 
             let newCard = {
-                // id: ,
+                id: Math.random() * cards.length,
                 title: titleText,
                 body: bodyText
             }
 
-            setCards([...cards, newCard])
+            setCards([newCard, ...cards])
 
             setTitleText('')
             setBodyText('')
