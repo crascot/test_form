@@ -10,7 +10,7 @@ import { FeedPush } from '../services/services';
 import FeedCreat from './feed-card/feed-create';
 
 
-const Feed = ({ nickname }) => {
+const Feed = () => {
 
     const [cards, setCards] = useState([])
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
@@ -29,7 +29,7 @@ const Feed = ({ nickname }) => {
     if (token) {
         return (
             <Box display="flex" flexWrap="wrap" justifyContent="flex-start">
-                <FeedHeader setToken={setToken} nickname={nickname} search={search} setSearch={setSearch} />
+                <FeedHeader setToken={setToken} search={search} setSearch={setSearch} />
                 <Container>
                     <FeedCreat  cards={cards} setCards={setCards} />
                     <FeedCard cards={cards} setCards={setCards} findCards={findCards} />

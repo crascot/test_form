@@ -58,6 +58,7 @@ const Register = ({
         CheckIn(nickname, email, password, confirmPassword)
             .then(() => {
                 localStorage.setItem('auth_token', true)
+                localStorage.setItem('userName', nickname)
                 setRedirect('/feed')
                 clear()
             }).catch((props) => {

@@ -90,7 +90,7 @@ const Form = () => {
               clear={clear} clearType={clearType}
             />
           </Route>
-          <Route path='/feed'><Feed nickname={nickname} /></Route>
+          <Route path='/feed'><Feed /></Route>
         </Switch>
       </BrowserRouter>
     </div>
