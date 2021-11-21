@@ -22,11 +22,11 @@ const useStyles = makeStyles({
         margin: '0 -15xp',
         padding: '15px'
     },
-    center: {
+    left: {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        width: '30%',
+        width: '20%',
         textAlign: 'center'
     },
     name: {
@@ -48,10 +48,9 @@ const FeedHeader = ({ setToken, nickname, search, setSearch }) => {
 
     return (
         <Box className={classes.block}>
-
-            <Typography variant="h4">Test-Form</Typography>
-            <div className={classes.center}>
-                <TextField label="Пойск..." value={search} onChange={(event) => setSearch(event.target.value)} />
+            <div className={classes.left}>
+                <Typography variant="h4">Test-Form</Typography>
+                <TextField value={search} onChange={(event) => setSearch(event.target.value)} id="filled-basic" label="Пойск..." variant="filled" size="small" />
             </div>
             <div>
                 <Button

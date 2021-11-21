@@ -32,14 +32,18 @@ const useStyles = makeStyles({
         marginLeft: '88%',
         cursor: 'pointer',
     },
+    content: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center'
+    },
     body: {
         borderTop: '3px solid #0dcaf0',
         paddingTop: 4
     },
     save: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
+        width: '100%',
+        textAlign: 'right',
         marginTop: 5,
     },
     pagination: {
@@ -94,7 +98,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
                         findCards.map((props) => (
                             <Card className={classes.card} id={props.id} key={props.id}>
                                 <HighlightOff className={classes.icon} onClick={() => deleteCard(props.id)} />
-                                <CardContent>
+                                <CardContent className={classes.content}>
                                     <div>
                                         {
                                             edit === props.id ? <div>
@@ -128,7 +132,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
                                             edit === props.id ?
                                                 <Button onClick={() => saveCard(props.id)} size='small'>Сохранить</Button>
                                                 :
-                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать {props.id}</Button>
+                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать</Button>
                                         }
                                     </Typography>
                                 </CardContent>
