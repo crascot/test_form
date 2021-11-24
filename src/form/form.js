@@ -4,6 +4,7 @@ import Register from './register';
 import Feed from '../feed/feed';
 import './form.scss';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Profile from '../profile/profile';
 
 
 const Form = () => {
@@ -24,7 +25,7 @@ const Form = () => {
   const [helperTextPassword, setHelperTextPassword] = useState('')
   const [helperConfirmPassword, setHelperTextConfirmPassword] = useState('')
 
-  const targetName = (event)  => setNickname(event.target.value)
+  const targetName = (event) => setNickname(event.target.value)
   const targetEmail = (event) => setEmail(event.target.value)
   const targetPassword = (event) => setPassword(event.target.value)
   const targetConfirmPassword = (event) => setConfirmPassword(event.target.value)
@@ -91,6 +92,7 @@ const Form = () => {
             />
           </Route>
           <Route path='/feed'><Feed /></Route>
+          <Route path='/profile'><Profile /></Route>
         </Switch>
       </BrowserRouter>
     </div>
