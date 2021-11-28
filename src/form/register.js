@@ -8,6 +8,8 @@ import {
     TextField,
     Container
 } from '@material-ui/core';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
 import { CheckIn } from '../services/services';
@@ -24,6 +26,8 @@ const Register = ({
     helperTextName, helperTextEmail,
     helperTextPassword, helperConfirmPassword,
     checkName, checkEmail, checkPassword, checkConfirmPassword,
+    show, showPassword,
+    buttonStyle, setButtonStyle,
     clear, clearType }) => {
 
     const classes = useStyles()
@@ -43,8 +47,14 @@ const Register = ({
             if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
             else checkEmail()()
 
-            if (password.length < 8) checkPassword(true)('Пароль слишкой короткий')
-            else checkPassword()()
+            if (password.length < 8) {
+                checkPassword(true)('Пароль слишкой короткий')
+                setButtonStyle(27)
+            }
+            else {
+                checkPassword()()
+                setButtonStyle()
+            }
 
             if (password !== confirmPassword) checkConfirmPassword(true)('Пароли не совпадают')
             else checkConfirmPassword()()
@@ -58,6 +68,7 @@ const Register = ({
         CheckIn(nickname, email, password, confirmPassword)
             .then(() => {
                 localStorage.setItem('auth_token', true)
+                localStorage.setItem('userName', nickname)
                 setRedirect('/feed')
                 clear()
             }).catch((props) => {
@@ -92,10 +103,53 @@ const Register = ({
                     <Link to='/' onClick={clear} style={{ textDecoration: 'none' }}><Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">Войти</Button></Link>
                 </Grid>
                 <Grid className={`form-register ${classes.body}`} container>
-                    <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' error={errorName} helperText={helperTextName} />
-                    <TextField label="Введите вашу почту" value={email} onChange={targetEmail} disabled={disabled} type='email' error={errorEmail} helperText={helperTextEmail} />
-                    <TextField label="Придумайте пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' error={errorPassword} helperText={helperTextPassword} />
-                    <TextField label="Подтвердите пароль" value={confirmPassword} onChange={targetConfirmPassword} disabled={disabled} type='password' error={errorConfirmPassword} helperText={helperConfirmPassword} />
+                    <TextField
+                        label="Введите имя"
+                        value={nickname}
+                        onChange={targetName}
+                        disabled={disabled}
+                        fullWidth type='text'
+                        error={errorName}
+                        helperText={helperTextName}
+                    />
+                    <TextField
+                        label="Введите вашу почту"
+                        value={email}
+                        onChange={targetEmail}
+                        disabled={disabled}
+                        fullWidth type='email'
+                        error={errorEmail}
+                        helperText={helperTextEmail}
+                    />
+                    <span>
+                        <TextField
+                            fullWidth
+                            label="Введите пароль"
+                            value={password}
+                            onChange={targetPassword}
+                            disabled={disabled}
+                            type={show === true ? 'text' : 'password'}
+                            error={errorPassword}
+                            helperText={helperTextPassword}
+                        />
+                        <Button
+                            className={classes.showPasswordButton}
+                            onClick={showPassword}
+                            disabled={disabled}
+                            style={{ marginBottom: buttonStyle }}
+                        >
+                            {show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </Button>
+                    </span>
+                    <TextField
+                        label="Подтвердите пароль"
+                        value={confirmPassword}
+                        onChange={targetConfirmPassword}
+                        disabled={disabled} fullWidth
+                        type={show === true ? 'text' : 'password'}
+                        error={errorConfirmPassword}
+                        helperText={helperConfirmPassword}
+                    />
                 </Grid>
                 <Grid className='form-register footer' container direction="row" justify="space-between">
                     <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' ><Redirect to={redirect} />Зарегистриговаться</Button >

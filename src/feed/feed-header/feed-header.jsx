@@ -10,12 +10,12 @@ import {
     Menu,
     MenuItem
 } from '@mui/material';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles({
     block: {
         width: '100%',
         display: 'flex',
-        flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#0dcaf0',
@@ -26,31 +26,35 @@ const useStyles = makeStyles({
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        width: '20%',
         textAlign: 'center'
+    },
+    webName: {
+        marginRight: 20
     },
     name: {
         fontSize: 25
     }
 });
 
-const FeedHeader = ({ setToken, nickname, search, setSearch }) => {
+const FeedHeader = ({ setToken, search, setSearch }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [feedName] = useState(nickname)
+    const [feedName] = useState(localStorage.getItem('userName'))
+    const [redirect, setRedirect] = useState('/feed')
 
     const open = Boolean(anchorEl)
 
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleClose = () => setAnchorEl(null)
+    const profile = () => setRedirect('/profile')
     const leave = () => setToken(localStorage.removeItem('auth_token'))
 
     return (
         <Box className={classes.block}>
             <div className={classes.left}>
-                <Typography variant="h4">Test-Form</Typography>
-                <TextField value={search} onChange={(event) => setSearch(event.target.value)} id="filled-basic" label="Пойск..." variant="filled" size="small" />
+                <Typography variant="h4" className={classes.webName}>Test-Form</Typography>
+                <TextField value={search} onChange={(event) => setSearch(event.target.value)} id="filled-basic" label="Поиск..." variant="filled" size="small" />
             </div>
             <div>
                 <Button
@@ -74,6 +78,7 @@ const FeedHeader = ({ setToken, nickname, search, setSearch }) => {
                         'aria-labelledby': 'basic-button',
                     }}
                 >
+                    <MenuItem onClick={profile}><Redirect to={redirect} />Профиль</MenuItem>
                     <MenuItem onClick={leave}>Выйти</MenuItem>
                 </Menu>
             </div>

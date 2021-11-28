@@ -6,8 +6,10 @@ import {
   Card,
   CircularProgress,
   TextField,
-  Container
+  Container,
 } from '@material-ui/core';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
 import { SignIn } from '../services/services';
@@ -20,6 +22,8 @@ const Login = ({
   errorName, errorPassword,
   helperTextName, helperTextPassword,
   checkName, checkPassword,
+  show, showPassword,
+  buttonStyle, setButtonStyle,
   clear, clearType }) => {
 
   const classes = useStyles()
@@ -34,8 +38,15 @@ const Login = ({
       else if (+nickname) checkName(true)('Имя не может состоять из цифр')
       else checkName()()
 
-      if (password.length < 8) checkPassword(true)('Пароль слишкой короткий')
-      else checkPassword()()
+      if (password.length < 8) {
+        checkPassword(true)('Пароль слишкой короткий')
+        setButtonStyle(27);
+      }
+      else {
+        checkPassword()()
+        setButtonStyle()
+      }
+
     }
   })
 
@@ -46,6 +57,7 @@ const Login = ({
     SignIn(nickname, password)
       .then(() => {
         localStorage.setItem('auth_token', true)
+        localStorage.setItem('userName', nickname)
         setRedirect('/feed')
         clear()
       }).catch((props) => {
@@ -72,13 +84,45 @@ const Login = ({
         <Grid className='form-register head' container direction="row" justify="space-between">
           <Typography variant='h5'>Войти в систему</Typography>
           <Typography variant='h5'>или</Typography>
-          <Link to='/register' onClick={clear} style={{ textDecoration: 'none' }}><Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">Зарегистриговаться</Button></Link>
+          <Link to='/register' onClick={clear} style={{ textDecoration: 'none' }}>
+            <Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">
+              Зарегистриговаться
+            </Button>
+          </Link>
         </Grid>
         <Grid className={`form-register ${classes.body}`} container>
-          <TextField label="Введите имя" value={nickname} onChange={targetName} disabled={disabled} type='text' error={errorName} helperText={helperTextName} />
-          <TextField label="Введите пароль" value={password} onChange={targetPassword} disabled={disabled} type='password' error={errorPassword} helperText={helperTextPassword} />
+          <TextField
+            fullWidth
+            label="Введите имя"
+            value={nickname}
+            onChange={targetName}
+            disabled={disabled}
+            type='text'
+            error={errorName}
+            helperText={helperTextName}
+          />
+          <span>
+            <TextField
+              fullWidth
+              label="Введите пароль"
+              value={password}
+              onChange={targetPassword}
+              disabled={disabled}
+              type={show === true ? 'text' : 'password'}
+              error={errorPassword}
+              helperText={helperTextPassword}
+            />
+            <Button
+              className={classes.showPasswordButton}
+              onClick={showPassword}
+              disabled={disabled}
+              style={{ marginBottom: buttonStyle }}
+            >
+              {show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </Button>
+          </span>
         </Grid>
-        <Grid className='form-register footer' container direction="row" justify="space-between" alignItems="center">
+        <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
           <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
           <CircularProgress id='loader' className={`${hide} + visible`} />
           <Button onClick={clear} type='submit' disabled={disabled}>Очистить</Button>

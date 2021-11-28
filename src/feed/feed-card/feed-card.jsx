@@ -37,9 +37,13 @@ const useStyles = makeStyles({
         flexWrap: 'wrap',
         alignItems: 'center'
     },
+    title: {
+        width: '100%',
+        borderBottom: '3px solid #0dcaf0',
+        marginBottom: 4
+    },
     body: {
-        borderTop: '3px solid #0dcaf0',
-        paddingTop: 4
+        width: '100%',
     },
     save: {
         width: '100%',
@@ -80,6 +84,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
             }
             return item
         })
+
         setCards(newCard)
         setEdit(null)
     }
@@ -99,7 +104,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
                             <Card className={classes.card} id={props.id} key={props.id}>
                                 <HighlightOff className={classes.icon} onClick={() => deleteCard(props.id)} />
                                 <CardContent className={classes.content}>
-                                    <div>
+                                    <div className={classes.title}>
                                         {
                                             edit === props.id ? <div>
                                                 <TextField value={valueTitle} onChange={(e) => setValueTitle(e.target.value)} fullWidth multiline />
