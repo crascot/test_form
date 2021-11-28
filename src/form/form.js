@@ -15,6 +15,8 @@ const Form = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const [disabled, setDisabled] = useState(false)
+  const [show, setShow] = useState(false)
+  const [buttonStyle, setButtonStyle] = useState(0);
 
   const [errorName, setErrorName] = useState(false)
   const [errorEmail, setErrorEmail] = useState(false)
@@ -47,11 +49,17 @@ const Form = () => {
     setHelperTextConfirmPassword(text)
   }
 
+  const showPassword = () => {
+    if (show === true) setShow(false)
+    else setShow(true)
+  }
+
   const clearType = () => {
     checkName()()
     checkEmail()()
     checkPassword()()
     checkConfirmPassword()()
+    setButtonStyle(0)
   }
   const clear = () => {
     setNickname('');
@@ -71,6 +79,8 @@ const Form = () => {
               disabled={disabled} setDisabled={setDisabled}
               errorName={errorName} errorPassword={errorPassword}
               helperTextName={helperTextName} helperTextPassword={helperTextPassword}
+              show={show} showPassword={showPassword}
+              buttonStyle={buttonStyle} setButtonStyle={setButtonStyle}
               checkName={checkName} checkPassword={checkPassword}
               clear={clear} clearType={clearType}
             />
@@ -88,6 +98,8 @@ const Form = () => {
               helperTextPassword={helperTextPassword} helperConfirmPassword={helperConfirmPassword}
               checkName={checkName} checkEmail={checkEmail}
               checkPassword={checkPassword} checkConfirmPassword={checkConfirmPassword}
+              show={show} showPassword={showPassword}
+              buttonStyle={buttonStyle} setButtonStyle={setButtonStyle}
               clear={clear} clearType={clearType}
             />
           </Route>

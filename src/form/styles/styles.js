@@ -2,24 +2,45 @@ import { makeStyles } from '@material-ui/core';
 
 
 export const useStyles = makeStyles({
-    body: {
-      margin: '20px 0',
-      paddingBottom: 5,
-      borderTop: '3px solid #0dcaf0',
-  
-      '& *': {
-        width: '100%',
-        marginTop: 7,
-      },
+  body: {
+    margin: '20px 0',
+    paddingBottom: 5,
+    borderTop: '3px solid #0dcaf0',
+    '& *': {
+      marginTop: 7,
     },
-    register: {
-      '& *': {
-        textDecoration: 'none',
-        color: 'inherit',
+    '& span': {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'flex-end',
+
+      '& button': {
+        marginLeft: '-2px',
+        border: '1px solid gray',
+
+        '& *': {
+          margin: '0 auto'
+        }
       }
     },
-    hide: {
-      display: 'none',
-      margin: 30,
-    },
-  })
+  },
+  register: {
+    '& *': {
+      textDecoration: 'none',
+      color: 'inherit',
+    }
+  },
+  showPasswordButton: {
+    margin: '0 auto',
+    '& svg': {
+      marginLeft: 10
+    }
+  },
+  footer: {
+    paddingTop: 10,
+  },
+  hide: {
+    display: 'none',
+    margin: 30,
+  },
+})
