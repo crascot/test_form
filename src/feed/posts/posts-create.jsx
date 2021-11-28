@@ -16,7 +16,7 @@ const useStyles = makeStyles({
         flexWrap: 'wrap',
         justifyContent: 'center',
     },
-    card: {
+    post: {
         minWidth: 280,
         maxWidth: 280,
         marginTop: '2rem',
@@ -32,22 +32,22 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedCard = ({ cards, setCards }) => {
+const PostCreate = ({ posts, setPosts }) => {
     const classes = useStyles();
 
     const [titleText, setTitleText] = useState('')
     const [bodyText, setBodyText] = useState('')
 
-    const addCards = () => {
+    const addPosts = () => {
         if (titleText.trim() && bodyText.trim()) {
 
-            let newCard = {
-                id: Math.random() * cards.length,
+            let newPost = {
+                id: Math.random() * posts.length,
                 title: titleText,
                 body: bodyText
             }
 
-            setCards([newCard, ...cards])
+            setPosts([newPost, ...posts])
 
             setTitleText('')
             setBodyText('')
@@ -56,16 +56,16 @@ const FeedCard = ({ cards, setCards }) => {
 
     return (
         <Box className={classes.block}>
-            <Card className={classes.card}>
+            <Card className={classes.post}>
                 <Typography variant='h6'>Добавить пост</Typography>
                 <CardContent className={classes.center}>
                     <TextField className={classes.input} fullWidth label="Заголовок" value={titleText} onChange={(v) => setTitleText(v.target.value)} type='text' />
                     <TextField className={classes.input} fullWidth label="Содержание" value={bodyText} onChange={(v) => setBodyText(v.target.value)} type='text' />
                 </CardContent>
-                <Button onClick={addCards} size='large'>Сохранить</Button>
+                <Button onClick={addPosts} size='large'>Сохранить</Button>
             </Card>
         </Box>
     )
 }
 
-export default FeedCard;
+export default PostCreate;

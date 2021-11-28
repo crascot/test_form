@@ -58,7 +58,7 @@ const Login = ({
       .then(() => {
         localStorage.setItem('auth_token', true)
         localStorage.setItem('userName', nickname)
-        setRedirect('/feed')
+        setRedirect('/feed/posts')
         clear()
       }).catch((props) => {
         switch (props) {

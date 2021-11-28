@@ -41,7 +41,7 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
 
     const [anchorEl, setAnchorEl] = useState(null)
     const [feedName] = useState(localStorage.getItem('userName'))
-    const [redirect, setRedirect] = useState('/feed')
+    const [redirect, setRedirect] = useState('/posts')
 
     const open = Boolean(anchorEl)
 

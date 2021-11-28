@@ -17,11 +17,11 @@ const useStyles = makeStyles({
     }
 });
 
-const Pagination = ({ cardsLength, totalCards, paginate }) => {
+const Pagination = ({ postsLength, totalPosts, paginate }) => {
     const classes = useStyles();
 
     const pageNumbers = []
-    for (let i = 1; i <= Math.ceil(totalCards / cardsLength); i++) {
+    for (let i = 1; i <= Math.ceil(totalPosts / postsLength); i++) {
         pageNumbers.push(i)
     }
 
