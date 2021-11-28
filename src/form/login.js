@@ -112,7 +112,14 @@ const Login = ({
               error={errorPassword}
               helperText={helperTextPassword}
             />
-            <Button className={classes.showPasswordButton} onClick={showPassword} style={{ marginBottom: buttonStyle }}>{show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}</Button>
+            <Button
+              className={classes.showPasswordButton}
+              onClick={showPassword}
+              disabled={disabled}
+              style={{ marginBottom: buttonStyle }}
+            >
+              {show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </Button>
           </span>
         </Grid>
         <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
