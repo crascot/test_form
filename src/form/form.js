@@ -4,7 +4,6 @@ import Register from './register';
 import Feed from '../feed/feed';
 import './form.scss';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Profile from '../profile/profile';
 
 
 const Form = () => {
@@ -104,7 +103,6 @@ const Form = () => {
             />
           </Route>
           <Route path='/feed'><Feed /></Route>
-          <Route path='/profile'><Profile /></Route>
         </Switch>
       </BrowserRouter>
     </div>

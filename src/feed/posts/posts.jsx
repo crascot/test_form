@@ -9,7 +9,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import HighlightOff from '@material-ui/icons/HighlightOff';
-import Pagination from '../feed-card/pagination/pagination';
+import Pagination from './pagination/pagination';
+
 
 
 const useStyles = makeStyles({
@@ -18,13 +19,13 @@ const useStyles = makeStyles({
         flexWrap: 'wrap',
         justifyContent: 'center',
     },
-    card: {
+    post: {
         minWidth: 280,
         maxWidth: 280,
         marginTop: '2rem',
         margin: '0 14px',
     },
-    noCards: {
+    noPosts: {
         marginTop: 20,
     },
     icon: {
@@ -57,7 +58,7 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedCard = ({ cards, setCards, findCards }) => {
+const Posts = ({ posts, setPosts, findPosts }) => {
     const classes = useStyles();
 
     const [edit, setEdit] = useState(null)
@@ -65,19 +66,19 @@ const FeedCard = ({ cards, setCards, findCards }) => {
     const [valueBody, setValueBody] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
 
-    let cardsLength = 8
-    const lastCardIndex = currentPage * cardsLength
-    const firstCardsIndex = lastCardIndex - cardsLength
+    let postsLength = 8
+    const lastPostIndex = currentPage * postsLength
+    const firstPostsIndex = lastPostIndex - postsLength
 
-    const deleteCard = (id) => setCards(cards.filter((el) => el.id !== id))
+    const deletePost = (id) => setPosts(posts.filter((el) => el.id !== id))
 
-    const editCard = (id, title, body) => {
+    const editPost = (id, title, body) => {
         setEdit(id)
         setValueTitle(title)
         setValueBody(body)
     }
-    const saveCard = (id) => {
-        let newCard = cards.map(item => {
+    const savePost = (id) => {
+        let newPost = posts.map(item => {
             if (item.id === id) {
                 item.title = valueTitle
                 item.body = valueBody
@@ -85,7 +86,7 @@ const FeedCard = ({ cards, setCards, findCards }) => {
             return item
         })
 
-        setCards(newCard)
+        setPosts(newPost)
         setEdit(null)
     }
 
@@ -94,15 +95,15 @@ const FeedCard = ({ cards, setCards, findCards }) => {
     return (
         <Box className={classes.block}>
             {
-                cards.length === 0 ?
-                    <Typography variant="h3" className={classes.noCards}>Посты закончились</Typography>
+                posts.length === 0 ?
+                    <Typography variant="h3" className={classes.noPosts}>Посты закончились</Typography>
                     :
-                    findCards.length === 0 ?
-                        <Typography variant="h3" className={classes.noCards}>Пост не найден</Typography>
+                    findPosts.length === 0 ?
+                        <Typography variant="h3" className={classes.noPosts}>Пост не найден</Typography>
                         :
-                        findCards.map((props) => (
-                            <Card className={classes.card} id={props.id} key={props.id}>
-                                <HighlightOff className={classes.icon} onClick={() => deleteCard(props.id)} />
+                        findPosts.map((props) => (
+                            <Card className={classes.post} id={props.id} key={props.id}>
+                                <HighlightOff className={classes.icon} onClick={() => deletePost(props.id)} />
                                 <CardContent className={classes.content}>
                                     <div className={classes.title}>
                                         {
@@ -135,22 +136,22 @@ const FeedCard = ({ cards, setCards, findCards }) => {
                                     <Typography className={classes.save} variant="button">
                                         {
                                             edit === props.id ?
-                                                <Button onClick={() => saveCard(props.id)} size='small'>Сохранить</Button>
+                                                <Button onClick={() => savePost(props.id)} size='small'>Сохранить</Button>
                                                 :
-                                                <Button onClick={() => editCard(props.id, props.title, props.body)}>Редактировать</Button>
+                                                <Button onClick={() => editPost(props.id, props.title, props.body)}>Редактировать</Button>
                                         }
                                     </Typography>
                                 </CardContent>
                             </Card>
-                        )).slice(firstCardsIndex, lastCardIndex)
+                        )).slice(firstPostsIndex, lastPostIndex)
             }
             <Pagination
-                cardsLength={cardsLength}
-                totalCards={findCards.length}
+                postsLength={postsLength}
+                totalPosts={findPosts.length}
                 paginate={paginate}
             />
         </Box>
     )
 }
 
-export default FeedCard;
+export default Posts;
