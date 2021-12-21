@@ -80,23 +80,11 @@ const User = ({ edit }) => {
     const [avatar, setAvatar] = useState(null)
 
     const loadAvatar = (event) => {
-        if (!event.target.files.length) {
-            return
-        }
-
-        const files = Array.from(event.target.files)
-
-        if (!files[0].type.match('image')) {
-            return
-        }
-
+        const file = event.target.files[0];
         const reader = new FileReader()
 
-        reader.onload = ev => {
-            setAvatar(ev.target.result)
-        }
-
-        reader.readAsDataURL(files[0])
+        reader.onload = e => setAvatar(e.target.result)
+        reader.readAsDataURL(file)
     }
 
     const [status, setStatus] = useState('')
@@ -125,7 +113,7 @@ const User = ({ edit }) => {
                     <div>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <label htmlFor="contained-button-file" className={classes.avatar}>
-                                <Input id="contained-button-file" onClick={loadAvatar} multiple type="file" />
+                                <Input id="contained-button-file" onChange={loadAvatar} multiple type="file" />
                                 <CardMedia
                                     component="img"
                                     height="190"
