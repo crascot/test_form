@@ -13,6 +13,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const Feed = () => {
 
+    const [feedName] = useState(localStorage.getItem('userName'))
     const [posts, setPosts] = useState([])
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
     const [search, setSearch] = useState('')
@@ -33,14 +34,14 @@ const Feed = () => {
                 <BrowserRouter basename='test_form/feed'>
                     <Switch>
                         <Route path='/posts' exact>
-                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} />
+                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} feedName={feedName} />
                             <Container>
                                 <PostCreate posts={posts} setPosts={setPosts} />
                                 <FeedPost posts={posts} setPosts={setPosts} findPosts={findPosts} />
                             </Container>
                         </Route>
                         <Route path='/profile'>
-                            <Profile />
+                            <Profile feedName={feedName} />
                         </Route>
                     </Switch>
                 </BrowserRouter>

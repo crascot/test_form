@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Alert,
@@ -14,8 +14,6 @@ import {
 } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import PersonIcon from '@mui/icons-material/Person';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import SaveIcon from '@mui/icons-material/Save';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { green, red } from '@mui/material/colors';
@@ -29,7 +27,7 @@ const useStyles = makeStyles({
     status: {
         width: '100%',
         height: 20,
-        margin: '15px 0',
+        margin: '15px 0 !important',
         padding: 0,
     },
     userStatus: {
@@ -39,10 +37,10 @@ const useStyles = makeStyles({
         alignItems: 'center',
     },
     menuStatus: {
-        margin: '8px',
-        borderRadius: 5,
-        fontWeight: 500,
-        color: '#fff',
+        margin: '8px !important',
+        borderRadius: '5px !important',
+        fontWeight: '500 !important',
+        color: '#fff !important',
     },
     aboutMe: {
         display: 'flex',
@@ -61,14 +59,14 @@ const useStyles = makeStyles({
     }
 });
 
-const online = green[800]
-const offline = red[800]
+const online = green[800];
+const offline = red[800];
+const Input = styled('input')({
+    display: 'none',
+});
 
-const User = () => {
+const User = ({ edit }) => {
     const classes = useStyles();
-    const Input = styled('input')({
-        display: 'none',
-    });
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -79,7 +77,27 @@ const User = () => {
         setAnchorEl(null);
     };
 
-    const [avatar, setAvatar] = useState('')
+    const [avatar, setAvatar] = useState(null)
+
+    const loadAvatar = (event) => {
+        if (!event.target.files.length) {
+            return
+        }
+
+        const files = Array.from(event.target.files)
+
+        if (!files[0].type.match('image')) {
+            return
+        }
+
+        const reader = new FileReader()
+
+        reader.onload = ev => {
+            setAvatar(ev.target.result)
+        }
+
+        reader.readAsDataURL(files[0])
+    }
 
     const [status, setStatus] = useState('')
     const [statusColor, setStatusColor] = useState('')
@@ -94,33 +112,28 @@ const User = () => {
     }
     const handleOffline = () => {
         checkStatus('Offline')('error')
-
         setAnchorEl(null);
     }
 
-    const [edit, setEdit] = useState(false)
-    const editUser = () => {
-        if (edit === true) setEdit(false)
-        else setEdit(true)
-    }
     const [about, setAbout] = useState('')
     const checkAbout = event => setAbout(event.target.value)
 
     return (
-        <Box width={320}>
+        <Box width={320} style={{ marginRight: 8 }}>
             <Card variant="outlined">
                 <CardContent>
                     <div>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <label htmlFor="contained-button-file" className={classes.avatar}>
-                                <Input accept="image/*" id="contained-button-file" multiple type="file" />
+                                <Input id="contained-button-file" onClick={loadAvatar} multiple type="file" />
                                 <CardMedia
                                     component="img"
                                     height="190"
-                                    image={avatar === true ?
-                                        avatar
+                                    image={avatar === null ?
+                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpAlUbnpAz36HIeIvG7nKBUHuILO3N2qODJxcAuTUSbrf_WoqiVsVpRcolCGCKu7O7f9Y&usqp=CAU'
                                         :
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpAlUbnpAz36HIeIvG7nKBUHuILO3N2qODJxcAuTUSbrf_WoqiVsVpRcolCGCKu7O7f9Y&usqp=CAU'}
+                                        avatar
+                                    }
                                     alt="Avatar"
                                 />
                             </label>
@@ -167,7 +180,6 @@ const User = () => {
                                     style={{ marginBottom: 5.6 }}
                                     id="standard-multiline-static"
                                     multiline
-                                    defaultValue="Default Value"
                                     fullWidth
                                 />
                                 :
@@ -182,14 +194,6 @@ const User = () => {
                                             </Alert>
                                     }
                                 </Typography>
-                        }
-                    </div>
-                    <div>
-                        {
-                            edit === true ?
-                                <Button onClick={editUser} variant="contained" fullWidth><SaveIcon className={classes.icon} /> Сохранить</Button>
-                                :
-                                <Button onClick={editUser} variant="contained" fullWidth><BorderColorIcon className={classes.icon} /> Изменить профиль</Button>
                         }
                     </div>
                 </CardContent>

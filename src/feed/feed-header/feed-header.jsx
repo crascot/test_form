@@ -36,11 +36,10 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch }) => {
+const FeedHeader = ({ setToken, search, setSearch, feedName }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [feedName] = useState(localStorage.getItem('userName'))
     const [redirect, setRedirect] = useState('/posts')
 
     const open = Boolean(anchorEl)
