@@ -57,7 +57,6 @@ const Login = ({
     SignIn(nickname, password)
       .then(() => {
         localStorage.setItem('auth_token', true)
-        localStorage.setItem('userName', nickname)
         setRedirect('/feed/posts')
         clear()
       }).catch((props) => {

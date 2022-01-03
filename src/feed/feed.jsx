@@ -9,14 +9,18 @@ import FeedHeader from './feed-header/feed-header';
 import { FeedPush } from '../services/services';
 import PostCreate from './posts/posts-create';
 import Profile from './profile/profile';
+import { DB } from '../services/services';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const Feed = () => {
-
-    const [feedName] = useState(localStorage.getItem('userName'))
-    const [posts, setPosts] = useState([])
+    const [userId, setUserId] = useState(JSON.parse(localStorage.getItem('id')))
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
     const [search, setSearch] = useState('')
+    const [posts, setPosts] = useState([])
+
+    let findUser = DB.users.find(user => user.id === userId)
+    const [feedUser] = useState(findUser)
+
     useEffect(() => {
         FeedPush()
             .then((data) => {
@@ -34,14 +38,14 @@ const Feed = () => {
                 <BrowserRouter basename='test_form/feed'>
                     <Switch>
                         <Route path='/posts' exact>
-                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} feedName={feedName} />
+                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} setUserId={setUserId} name={feedUser.name} />
                             <Container>
                                 <PostCreate posts={posts} setPosts={setPosts} />
                                 <FeedPost posts={posts} setPosts={setPosts} findPosts={findPosts} />
                             </Container>
                         </Route>
                         <Route path='/profile'>
-                            <Profile feedName={feedName} />
+                            <Profile feedUser={feedUser} />
                         </Route>
                     </Switch>
                 </BrowserRouter>

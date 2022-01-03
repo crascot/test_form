@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     },
     noPosts: {
         marginTop: 20,
+        textAlign: 'center',
     },
     icon: {
         marginTop: '9px',

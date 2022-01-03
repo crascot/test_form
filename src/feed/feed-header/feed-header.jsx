@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch, feedName }) => {
+const FeedHeader = ({ setToken, search, setSearch, setUserId, name }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -47,7 +47,10 @@ const FeedHeader = ({ setToken, search, setSearch, feedName }) => {
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleClose = () => setAnchorEl(null)
     const profile = () => setRedirect('/profile')
-    const leave = () => setToken(localStorage.removeItem('auth_token'))
+    const leave = () => {
+        setToken(localStorage.removeItem('auth_token'))
+        setUserId(localStorage.removeItem('id'))
+    }
 
     return (
         <Box className={classes.block}>
@@ -65,7 +68,7 @@ const FeedHeader = ({ setToken, search, setSearch, feedName }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {feedName}
+                        {name}
                     </Typography>
                 </Button>
                 <Menu

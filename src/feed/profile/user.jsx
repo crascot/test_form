@@ -70,12 +70,8 @@ const User = ({ edit }) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const handleClick = (event) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
 
     const [avatar, setAvatar] = useState(null)
 
@@ -95,7 +91,6 @@ const User = ({ edit }) => {
     }
     const handleOnline = () => {
         checkStatus('Online')('success')
-
         setAnchorEl(null);
     }
     const handleOffline = () => {

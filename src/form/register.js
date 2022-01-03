@@ -12,7 +12,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { CheckIn } from '../services/services';
+import { CheckIn, reg } from '../services/services';
 
 
 const Register = ({
@@ -37,8 +37,6 @@ const Register = ({
     const [click, setClick] = useState(false)
 
     useEffect(() => {
-        const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-
         if (click === true) {
             if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
             else if (+nickname) checkName(true)('Имя не может состоять из цифр')
@@ -62,13 +60,15 @@ const Register = ({
     })
 
     const handleSubmit = () => {
+        const id = JSON.parse(localStorage.getItem('database')).users.length
+
         setClick(true);
         setDisabled(true);
         setHide(null);
         CheckIn(nickname, email, password, confirmPassword)
             .then(() => {
                 localStorage.setItem('auth_token', true)
-                localStorage.setItem('userName', nickname)
+                localStorage.setItem('id', id)
                 setRedirect('/feed/posts')
                 clear()
             }).catch((props) => {

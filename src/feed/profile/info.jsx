@@ -3,186 +3,246 @@ import {
     Box,
     Paper,
     Typography,
-    // TextField,
     Input,
-    Button,
-    // Stepper,
-    // Step,
-    // StepLabel,
+    Alert,
 } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { DB, reg } from '../../services/services';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SaveIcon from '@mui/icons-material/Save';
+import './profile.scss';
 
 
-const useStyles = makeStyles({
-    info: {
-        '& span': {
-            width: 133,
-            minWidth: 133
-        },
-        '& input': {
-            width: '133px'
-        }
-    },
-    footer: {
-        width: '100%',
-    },
-    icon: {
-        marginRight: 7
-    },
-})
+const Info = ({ feedUser }) => {
 
-const Info = ({ feedName, edit, editUser }) => {
-    const classes = useStyles();
+    const [edit, setEdit] = useState(0)
 
-    const [name, setName] = useState('')
-    const [birthday, setBirthday] = useState('')
-    const [gender, setGender] = useState('')
-    const [password, setPassword] = useState('')
-    const [phone, setPhone] = useState('')
-    const [email, setEmail] = useState('')
+    const filtered = DB.users.filter(user => user.name !== feedUser.name ? false : user)
 
-    let DB = JSON.parse(localStorage.getItem('database'))
+    const [name, setName] = useState(feedUser.name)
+    const [birthday, setBirthday] = useState(feedUser.birthday)
+    const [gender, setGender] = useState(feedUser.gender)
+    const [password, setPassword] = useState(feedUser.password)
+    const [phone, setPhone] = useState(feedUser.phone)
+    const [email, setEmail] = useState(feedUser.email)
 
     const changeData = () => {
-        DB.users.forEach(user => {
-            if (user.name === feedName) {
-                let newUser = {
-                    name: name,
-                    birthday: birthday,
-                    gender: gender,
-                    password: password,
-                    phone: phone,
-                    email: email,
+        return new Promise((resolve, reject) => {
+            filtered.forEach(user => {
+                if (name) {
+                    if (!name || +name) reject(alert('Имя некорректно'))
+                    else user.name = name
                 }
-                DB.users.push(newUser)
-                localStorage.setItem('database', JSON.stringify(DB))
-            }
+                if (birthday) user.birthday = birthday
+                if (gender) {
+                    if (gender === null) setGender('Пол не выбран')
+                    else user.gender = gender
+                }
+                if (password) {
+                    if (password.length > 8) user.password = password
+                    else reject(alert('Некорректный пароль'))
+                }
+                if (phone) {
+                    if (phone.length === 13) user.phone = phone
+                    else reject(alert('Некорректный номер телефона'))
+                }
+                if (email) {
+                    if (reg.test(email)) user.email = email;
+                    else reject(alert('Почта некорректна'))
+                }
+                resolve()
+            })
+        }).then(() => {
+            localStorage.setItem('database', JSON.stringify(DB))
+            setEdit(0)
         })
     }
 
     return (
         <Box style={{ width: '70%' }}>
-            <Paper elevation={1} style={{ padding: 16 }} >
+            <Paper elevation={1} className='paper' key={feedUser.name} >
                 <div>
-                    <Typography variant="h3" component="div" gutterBottom>
+                    <Typography variant="h3" component="div" gutterBottom className='title'>
                         Основная информация
                     </Typography>
 
-                    <div className={classes.info}>
-                        <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                            <Typography variant="overline" display="block" gutterBottom>
+                    <div className='info'>
+                        <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                            <Typography variant="overline" display="block" gutterBottom className='class'>
                                 Имя:
                             </Typography>
-                            {
-                                edit === false ?
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        {
-                                            DB.users.map((user) => user.name === feedName ? user.name : false)
-                                        }
-                                    </Typography>
-                                    :
-                                    <div>
+                            <div className='user-data' onClick={() => setEdit(1)}>
+                                {
+                                    edit === 1 ?
                                         <Input label="Standard" value={name} onChange={(event) => setName(event.target.value)} />
-                                    </div>
-                            }
+                                        :
+                                        <Typography variant="h6" gutterBottom component="div" key={name}>
+                                            {
+                                                name ?
+                                                    name
+                                                    :
+                                                    <Alert variant="filled" severity="error" className='alert'>Имя не указано</Alert>
+                                            }
+                                        </Typography>
+                                }
+
+                                {
+                                    edit === 1 ?
+                                        <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                        :
+                                        <SettingsIcon className='icon' />
+                                }
+                            </div>
                         </Box>
 
-                        <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                            <Typography variant="overline" display="block" gutterBottom>
+                        <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                            <Typography variant="overline" display="block" gutterBottom className='class'>
                                 Дата рождения:
                             </Typography>
-                            {
-                                edit === false ?
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        15.01.2003
-                                    </Typography>
-                                    :
-                                    <div>
-                                        <Input label="Standard" value={birthday} onChange={(event) => setBirthday(event.target.value)} />
-                                    </div>
-                            }
+                            <div className='user-data' onClick={() => setEdit(2)}>
+                                {
+                                    edit === 2 ?
+                                        <Input label="Standard" type='date' value={birthday} onChange={(event) => setBirthday(event.target.value)} />
+                                        :
+                                        <Typography variant="h6" gutterBottom component="div" key={birthday}>
+                                            {
+                                                birthday ?
+                                                    birthday
+                                                    :
+                                                    <Alert variant="filled" severity="warning" className='alert'>Дата рождения не указано</Alert>
+                                            }
+                                        </Typography>
+                                }
+
+                                {
+                                    edit === 2 ?
+                                        <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                        :
+                                        <SettingsIcon className='icon' />
+                                }
+                            </div>
                         </Box>
 
-                        <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                            <Typography variant="overline" display="block" gutterBottom>
+                        <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                            <Typography variant="overline" display="block" gutterBottom className='class'>
                                 Пол:
                             </Typography>
-                            {
-                                edit === false ?
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        Мужской
-                                    </Typography>
-                                    :
-                                    <div>
+                            <div className='user-data' onClick={() => setEdit(3)}>
+                                {
+                                    edit === 3 ?
                                         <Input label="Standard" value={gender} onChange={(event) => setGender(event.target.value)} />
-                                    </div>
-                            }
+                                        :
+                                        <Typography variant="h6" gutterBottom component="div" key={gender}>
+                                            {
+                                                gender ?
+                                                    gender
+                                                    :
+                                                    <Alert variant="filled" severity="warning" className='alert'>Пол не указан</Alert>
+                                            }
+                                        </Typography>
+                                }
+
+                                {
+                                    edit === 3 ?
+                                        <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                        :
+                                        <SettingsIcon className='icon' />
+                                }
+                            </div>
                         </Box>
 
-                        <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                            <Typography variant="overline" display="block" gutterBottom>
+                        <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                            <Typography variant="overline" display="block" gutterBottom className='class'>
                                 Пароль:
                             </Typography>
-                            {
-                                edit === false ?
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        {
-                                            DB.users.map((user) => user.name === feedName ? user.password : false)
-                                        }
-                                    </Typography>
-                                    :
-                                    <div>
+                            <div className='user-data' onClick={() => setEdit(4)}>
+                                {
+                                    edit === 4 ?
                                         <Input label="Standard" value={password} onChange={(event) => setPassword(event.target.value)} />
-                                    </div>
-                            }
+                                        :
+                                        <Typography variant="h6" gutterBottom component="div" key={password}>
+                                            {
+                                                password ?
+                                                    password
+                                                    :
+                                                    <Alert variant="filled" severity="error" className='alert'>Пароль не указан</Alert>
+                                            }
+                                        </Typography>
+                                }
+
+                                {
+                                    edit === 4 ?
+                                        <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                        :
+                                        <SettingsIcon className='icon' />
+                                }
+                            </div>
                         </Box>
                     </div>
 
                     <div>
-                        <Typography variant="h3" component="div" gutterBottom>
+                        <Typography variant="h3" component="div" gutterBottom className='title'>
                             Связь с пользователем
                         </Typography>
 
-                        <div className={classes.info}>
-                            <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                                <Typography variant="overline" display="block" gutterBottom>
+                        <div className='info'>
+                            <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                                <Typography variant="overline" display="block" gutterBottom className='class'>
                                     Телефон:
                                 </Typography>
-                                <div>
-                                    <Input label="Standard" type="tel" id="phone" value={phone} onChange={(event) => setPhone(event.target.value)} />
+                                <div className='user-data' onClick={() => setEdit(5)}>
+                                    {
+                                        edit === 5 ?
+                                            <Input label="Standard" value={phone} onChange={(event) => setPhone(event.target.value)} />
+                                            :
+                                            <Typography variant="h6" gutterBottom component="div" key={phone}>
+                                                {
+                                                    phone ?
+                                                        phone
+                                                        :
+                                                        <Alert variant="filled" severity="warning" className='alert'>Телефон не указан</Alert>
+                                                }
+                                            </Typography>
+                                    }
+
+                                    {
+                                        edit === 5 ?
+                                            <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                            :
+                                            <SettingsIcon className='icon' />
+                                    }
                                 </div>
                             </Box>
 
-                            <Box display='flex' alignItems='center' justifyContent='flex-start'>
-                                <Typography variant="overline" display="block" gutterBottom>
+                            <Box display='flex' alignItems='center' justifyContent='flex-start' className='box'>
+                                <Typography variant="overline" display="block" gutterBottom className='class'>
                                     Почта:
                                 </Typography>
-                                {
-                                    edit === false ?
-                                        <Typography variant="h6" gutterBottom component="div">
-                                            {
-                                                DB.users.map((user) => user.name === feedName ? user.email : false)
-                                            }
-                                        </Typography>
-                                        :
-                                        <div>
+                                <div className='user-data' onClick={() => setEdit(6)}>
+                                    {
+                                        edit === 6 ?
                                             <Input label="Standard" value={email} onChange={(event) => setEmail(event.target.value)} />
-                                        </div>
-                                }
+                                            :
+                                            <Typography variant="h6" gutterBottom component="div" key={email}>
+                                                {
+                                                    email ?
+                                                        email
+                                                        :
+                                                        <Alert variant="filled" severity="error" className='alert'>Почта не указана</Alert>
+                                                }
+                                            </Typography>
+                                    }
+
+                                    {
+                                        edit === 6 ?
+                                            <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
+                                            :
+                                            <SettingsIcon className='icon' />
+                                    }
+                                </div>
                             </Box>
                         </div>
                     </div>
                 </div>
-                <Box className={classes.footer} display='flex' alignItems='center' justifyContent='flex-end'>
-                    {
-                        edit === true ?
-                            <span onClick={changeData}><Button onClick={editUser} variant="contained"><SaveIcon className={classes.icon} /> Сохранить</Button></span>
-                            :
-                            <Button onClick={editUser} variant="contained"><BorderColorIcon className={classes.icon} /> Изменить профиль</Button>
-                    }
-                </Box>
             </Paper>
         </Box>
     )

@@ -1,7 +1,7 @@
+export const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+export let DB = JSON.parse(localStorage.getItem('database'));
+
 export function SignIn(userName, userPassword) {
-
-    let DB = JSON.parse(localStorage.getItem('database'))
-
     return new Promise((resolve, reject) => {
         if (!userName || +userName) {
             reject(userName)
@@ -12,10 +12,11 @@ export function SignIn(userName, userPassword) {
                 let findUser = DB.users.find(user => user.name === userName && user.password === userPassword)
 
                 if (findUser) {
+                    localStorage.setItem('id', findUser.id)
                     resolve()
                 }
                 else {
-                    reject(alert('Данного пользователя не существует или вы неправильно ввели свой пароль'))
+                    reject(alert('Данного пользователя не существует или вы неправильно ввели данные'))
                 }
             }, 3000);
         }
@@ -24,8 +25,10 @@ export function SignIn(userName, userPassword) {
 
 export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
     return new Promise((resolve, reject) => {
-        const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+        const id = JSON.parse(localStorage.getItem('database')).users.length;
+
         let user = {
+            id: id,
             name: userName,
             email: userEmail,
             password: userPassword
@@ -46,7 +49,6 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
         }
     }).then((user) => {
         return new Promise((resolve, reject) => {
-            let DB = JSON.parse(localStorage.getItem('database'))
             let duplicate = DB.users.find(user => user.email === userEmail)
 
             if (duplicate) {
