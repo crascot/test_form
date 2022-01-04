@@ -18,9 +18,15 @@
             }
             .user-data {
                 cursor: pointer;
-                width: max-content;
                 display: flex;
+                max-width: 300px !important;
+                width: max-content;
                 margin-bottom: 5px !important;
+
+                p {
+                    overflow: hidden;
+                    text-overflow: ellipsis !important;
+                }
             }
             .icon {
                 margin-left: 14px;

@@ -11,6 +11,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SaveIcon from '@mui/icons-material/Save';
 import './profile.scss';
 
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 
 const Info = ({ feedUser }) => {
 
@@ -25,6 +29,8 @@ const Info = ({ feedUser }) => {
     const [phone, setPhone] = useState(feedUser.phone)
     const [email, setEmail] = useState(feedUser.email)
 
+    if (!gender) setGender('Мужской')
+
     const changeData = () => {
         return new Promise((resolve, reject) => {
             filtered.forEach(user => {
@@ -33,13 +39,10 @@ const Info = ({ feedUser }) => {
                     else user.name = name
                 }
                 if (birthday) user.birthday = birthday
-                if (gender) {
-                    if (gender === null) setGender('Пол не выбран')
-                    else user.gender = gender
-                }
+                if (gender) user.gender = gender
                 if (password) {
-                    if (password.length > 8) user.password = password
-                    else reject(alert('Некорректный пароль'))
+                    if (password.length > 7) user.password = password
+                    else reject(alert('Пароль слишком короткий'))
                 }
                 if (phone) {
                     if (phone.length === 13) user.phone = phone
@@ -55,6 +58,21 @@ const Info = ({ feedUser }) => {
             localStorage.setItem('database', JSON.stringify(DB))
             setEdit(0)
         })
+    }
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+    const handleClose = () => setAnchorEl(null);
+    const changeGenderMen = () => {
+        setAnchorEl(null);
+        setGender('Мужской')
+    }
+    const changeGenderWomen = () => {
+        setAnchorEl(null);
+        setGender('Женский')
     }
 
     return (
@@ -75,7 +93,7 @@ const Info = ({ feedUser }) => {
                                     edit === 1 ?
                                         <Input label="Standard" value={name} onChange={(event) => setName(event.target.value)} />
                                         :
-                                        <Typography variant="h6" gutterBottom component="div" key={name}>
+                                        <Typography variant="h6" gutterBottom component="p" key={name}>
                                             {
                                                 name ?
                                                     name
@@ -103,7 +121,7 @@ const Info = ({ feedUser }) => {
                                     edit === 2 ?
                                         <Input label="Standard" type='date' value={birthday} onChange={(event) => setBirthday(event.target.value)} />
                                         :
-                                        <Typography variant="h6" gutterBottom component="div" key={birthday}>
+                                        <Typography variant="h6" gutterBottom component="p" key={birthday}>
                                             {
                                                 birthday ?
                                                     birthday
@@ -128,19 +146,39 @@ const Info = ({ feedUser }) => {
                             </Typography>
                             <div className='user-data' onClick={() => setEdit(3)}>
                                 {
-                                    edit === 3 ?
-                                        <Input label="Standard" value={gender} onChange={(event) => setGender(event.target.value)} />
-                                        :
-                                        <Typography variant="h6" gutterBottom component="div" key={gender}>
-                                            {
-                                                gender ?
-                                                    gender
-                                                    :
-                                                    <Alert variant="filled" severity="warning" className='alert'>Пол не указан</Alert>
-                                            }
-                                        </Typography>
+                                    <Typography variant="h6" gutterBottom component="p" key={gender}>
+                                        {
+                                            edit === 3 ?
+                                                <div>
+                                                    <Button
+                                                        style={{ width: 'max-content', marginTop: '-4px'}}
+                                                        variant="outlined"
+                                                        id="basic-button"
+                                                        aria-controls={open ? 'basic-menu' : undefined}
+                                                        aria-haspopup="true"
+                                                        aria-expanded={open ? 'true' : undefined}
+                                                        onClick={handleClick}
+                                                    >
+                                                        {gender}
+                                                    </Button>
+                                                    <Menu
+                                                        id="basic-menu"
+                                                        anchorEl={anchorEl}
+                                                        open={open}
+                                                        onClose={handleClose}
+                                                        MenuListProps={{
+                                                            'aria-labelledby': 'basic-button',
+                                                        }}
+                                                    >
+                                                        <MenuItem onClick={changeGenderMen}>Мужской</MenuItem>
+                                                        <MenuItem onClick={changeGenderWomen}>Женский</MenuItem>
+                                                    </Menu>
+                                                </div>
+                                                :
+                                                gender
+                                        }
+                                    </Typography>
                                 }
-
                                 {
                                     edit === 3 ?
                                         <SaveIcon onClick={changeData} onChange={() => setEdit(0)} />
@@ -159,7 +197,7 @@ const Info = ({ feedUser }) => {
                                     edit === 4 ?
                                         <Input label="Standard" value={password} onChange={(event) => setPassword(event.target.value)} />
                                         :
-                                        <Typography variant="h6" gutterBottom component="div" key={password}>
+                                        <Typography variant="h6" gutterBottom component="p" key={password}>
                                             {
                                                 password ?
                                                     password
@@ -192,9 +230,9 @@ const Info = ({ feedUser }) => {
                                 <div className='user-data' onClick={() => setEdit(5)}>
                                     {
                                         edit === 5 ?
-                                            <Input label="Standard" value={phone} onChange={(event) => setPhone(event.target.value)} />
+                                            <Input label="Standard" type='tel' value={phone} onChange={(event) => setPhone(event.target.value)} />
                                             :
-                                            <Typography variant="h6" gutterBottom component="div" key={phone}>
+                                            <Typography variant="h6" gutterBottom component="p" key={phone}>
                                                 {
                                                     phone ?
                                                         phone
@@ -222,7 +260,7 @@ const Info = ({ feedUser }) => {
                                         edit === 6 ?
                                             <Input label="Standard" value={email} onChange={(event) => setEmail(event.target.value)} />
                                             :
-                                            <Typography variant="h6" gutterBottom component="div" key={email}>
+                                            <Typography variant="h6" gutterBottom component="p" key={email}>
                                                 {
                                                     email ?
                                                         email
