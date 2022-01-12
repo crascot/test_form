@@ -1,187 +1,115 @@
 import React, { useState } from 'react';
 import {
-    Box,
-    Alert,
     Typography,
-    TextField,
-    Button,
     Card,
     CardMedia,
     CardContent,
-    Menu,
+    MenuList,
     MenuItem,
-    Fade,
+    ListItemText,
+    ListItemIcon,
+    Divider,
 } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import PersonIcon from '@mui/icons-material/Person';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@material-ui/core/styles';
-import { green, red } from '@mui/material/colors';
+import FeedIcon from '@mui/icons-material/Feed';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
+
 
 const useStyles = makeStyles({
-    avatar: {
-        width: 'max-content',
+    user: {
+        width: 300,
+        minWidth: 150,
+    },
+    label: {
         margin: '0 auto',
+    },
+    avatar: {
+        borderRadius: '30px',
         cursor: 'pointer',
     },
-    status: {
-        width: '100%',
-        height: 20,
-        margin: '15px 0 !important',
-        padding: 0,
-    },
-    userStatus: {
-        width: '100%',
-        height: 'inherit',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    menuStatus: {
-        margin: '8px !important',
-        borderRadius: '5px !important',
-        fontWeight: '500 !important',
-        color: '#fff !important',
-    },
-    aboutMe: {
-        display: 'flex',
-        alignItems: 'center',
-        fontWeight: 500,
-        color: 'gray',
-        marginBottom: 0
+    name: {
+        textAlign: 'center',
+        textOverflow: 'ellipsis',
+        maxWidth: '100%',
+        overflow: 'hidden',
     },
 
-    icon: {
-        marginRight: 7
-    },
-    center: {
-        display: 'flex',
-        alignItems: 'center',
+    link: {
+        textDecoration: 'none',
+        color: 'inherit'
     }
 });
 
-const online = green[800];
-const offline = red[800];
 const Input = styled('input')({
     display: 'none',
 });
 
-const User = ({ edit }) => {
+const User = ({ name }) => {
     const classes = useStyles();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
-
     const [avatar, setAvatar] = useState(null)
-
     const loadAvatar = (event) => {
         const file = event.target.files[0];
+        if (!file) return;
+
         const reader = new FileReader()
 
         reader.onload = e => setAvatar(e.target.result)
         reader.readAsDataURL(file)
     }
 
-    const [status, setStatus] = useState('')
-    const [statusColor, setStatusColor] = useState('')
-    const checkStatus = status => color => {
-        setStatus(status)
-        setStatusColor(color)
+    const leave = () => {
+        localStorage.removeItem('id')
+        localStorage.removeItem('auth_token')
     }
-    const handleOnline = () => {
-        checkStatus('Online')('success')
-        setAnchorEl(null);
-    }
-    const handleOffline = () => {
-        checkStatus('Offline')('error')
-        setAnchorEl(null);
-    }
-
-    const [about, setAbout] = useState('')
-    const checkAbout = event => setAbout(event.target.value)
 
     return (
-        <Box width={320} style={{ marginRight: 8 }}>
-            <Card variant="outlined">
-                <CardContent>
-                    <div>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <label htmlFor="contained-button-file" className={classes.avatar}>
-                                <Input id="contained-button-file" onChange={loadAvatar} multiple type="file" />
-                                <CardMedia
-                                    component="img"
-                                    height="190"
-                                    image={avatar === null ?
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpAlUbnpAz36HIeIvG7nKBUHuILO3N2qODJxcAuTUSbrf_WoqiVsVpRcolCGCKu7O7f9Y&usqp=CAU'
-                                        :
-                                        avatar
-                                    }
-                                    alt="Avatar"
-                                />
-                            </label>
-                        </Stack>
-
-                        <Button
-                            className={classes.status}
-                            id="fade-button"
-                            aria-controls="fade-menu"
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
-                        >
-                            <Alert
-                                severity={statusColor ? statusColor : setStatusColor('success')}
-                                icon={false} variant="filled"
-                                className={classes.userStatus}
-                            >
-                                {status ? status : setStatus('Online')}
-                            </Alert>
-                        </Button>
-                        <Menu
-                            id="fade-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'fade-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            TransitionComponent={Fade}
-                        >
-                            <MenuItem onClick={handleOnline} className={classes.menuStatus} style={{ backgroundColor: online }}>Online</MenuItem>
-                            <MenuItem onClick={handleOffline} className={classes.menuStatus} style={{ backgroundColor: offline }}>Offline</MenuItem>
-                        </Menu>
-                    </div>
-
-                    <div>
-                        <Typography className={classes.aboutMe} variant="h5" gutterBottom component="div"><PersonIcon /> Обо мне</Typography>
-                        {
-                            edit === true ?
-                                <TextField
-                                    value={about}
-                                    onChange={checkAbout}
-                                    style={{ marginBottom: 5.6 }}
-                                    id="standard-multiline-static"
-                                    multiline
-                                    fullWidth
-                                />
-                                :
-                                <Typography variant="subtitle1" gutterBottom component="div">
-                                    {
-                                        about ? about :
-                                            <Alert
-                                                className={classes.center}
-                                                severity='warning'
-                                            >
-                                                Данный пункт не заполнен, вы можете заполнить его нажав на "Изменить профиль"
-                                            </Alert>
-                                    }
-                                </Typography>
+        <Card className={classes.user}>
+            <Stack direction="row" alignItems="center" spacing={2}>
+                <label htmlFor="contained-button-file" className={classes.label}>
+                    <Input id="contained-button-file" onChange={loadAvatar} multiple type="file" />
+                    <CardMedia className={classes.avatar}
+                        component="img"
+                        height="190"
+                        image={avatar === null ?
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpAlUbnpAz36HIeIvG7nKBUHuILO3N2qODJxcAuTUSbrf_WoqiVsVpRcolCGCKu7O7f9Y&usqp=CAU'
+                            :
+                            avatar
                         }
-                    </div>
-                </CardContent>
-            </Card>
-        </Box>
+                        alt="Avatar"
+                    />
+                </label>
+            </Stack>
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div" className={classes.name}>
+                    {name}
+                </Typography>
+            </CardContent>
+
+            <Divider />
+
+            <MenuList className={classes.option}>
+                <Link to='/posts' className={classes.link}>
+                    <MenuItem>
+                        <ListItemIcon>
+                            <FeedIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Посты</ListItemText>
+                    </MenuItem>
+                </Link>
+                <a href="javascript:history.back()" onClick={leave} className={classes.link}>
+                    <MenuItem>
+                        <ListItemIcon>
+                            <LogoutIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Выйти</ListItemText>
+                    </MenuItem>
+                </a>
+            </MenuList>
+        </Card>
     )
 }
 
