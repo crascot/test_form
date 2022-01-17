@@ -51,9 +51,7 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
         return new Promise((resolve, reject) => {
             let duplicate = DB.users.find(user => user.email === userEmail)
 
-            if (duplicate) {
-                reject(alert('Данная почта занята'))
-            }
+            if (duplicate) reject(alert('Данная почта занята'))
             else {
                 localStorage.setItem('database', JSON.stringify(user))
                 DB.users.push(user)
@@ -61,6 +59,29 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
                 resolve()
             }
         })
+    })
+}
+
+export function changeData(userName, userBirthday, userGender, userPassword, userPhone, userEmail) {
+    return new Promise((resolve, reject) => {
+        if (userName) {
+            if (!userName || +userName) reject(alert('Имя некорректно'))
+            else resolve(userName);
+        }
+        if (userBirthday) resolve(userBirthday)
+        if (userGender) resolve(userGender)
+        if (userPassword) {
+            if (userPassword.length > 7) resolve(userPassword)
+            else reject(alert('Пароль слишком короткий'))
+        }
+        if (userPhone) {
+            if (userPhone.length === 13 || 11) resolve(userPhone)
+            else reject(alert('Некорректный номер телефона'))
+        }
+        if (userEmail) {
+            if (reg.test(userEmail)) resolve(userEmail)
+            else reject(alert('Почта некорректна'))
+        }
     })
 }
 

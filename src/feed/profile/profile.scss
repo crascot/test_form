@@ -1,0 +1,21 @@
+@media (max-width: 612px) {
+    .user {
+        max-width: min-content;
+    }
+
+    .main-title {
+        font-size: 2rem !important;
+    }
+}
+
+@media (max-width: 446px) {
+    .main-title {
+        display: none;
+    }
+    .block-data {
+        flex-wrap: wrap;
+    }
+    .title {
+        width: 100% !important;
+    }
+}

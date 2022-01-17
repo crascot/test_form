@@ -10,13 +10,13 @@ import {
     Alert,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { DB, reg } from '../../services/services';
+import { changeData, DB } from '../../services/services';
 import { useEffect } from 'react';
 
 
 const useStyles = makeStyles({
     info: {
-        margin: 30,
+        margin: '30px 15px',
     },
     blockData: {
         margin: '5px 0 !important',
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
         marginTop: 30,
         display: 'flex',
         justifyContent: 'flex-end'
-    }
+    },
 });
 
 const Info = ({ feedUser, name, setName }) => {
@@ -72,33 +72,21 @@ const Info = ({ feedUser, name, setName }) => {
 
     if (!gender) setGender('Мужской')
 
-    const changeData = () => {
-        return new Promise((resolve, reject) => {
-            filtered.forEach(user => {
-                if (name) {
-                    if (!name || +name) reject(alert('Имя некорректно'))
-                    else user.name = name
-                }
-                if (birthday) user.birthday = birthday
-                if (gender) user.gender = gender
-                if (password) {
-                    if (password.length > 7) user.password = password
-                    else reject(alert('Пароль слишком короткий'))
-                }
-                if (phone) {
-                    if (phone.length === 13 || 11) user.phone = phone
-                    else reject(alert('Некорректный номер телефона'))
-                }
-                if (email) {
-                    if (reg.test(email)) user.email = email;
-                    else reject(alert('Почта некорректна'))
-                }
-                resolve()
+    const handleSubmit = () => {
+        changeData(name, birthday, gender, password, phone, email)
+            .then(() => {
+                filtered.forEach(user => {
+                    if (name) user.name = name
+                    if (birthday) user.birthday = birthday
+                    if (gender) user.gender = gender
+                    if (password) user.password = password
+                    if (phone) user.phone = phone
+                    if (email) user.email = email
+                })
+                setEdit(false)
+            }).then(() => {
+                localStorage.setItem('database', JSON.stringify(DB))
             })
-        }).then(() => {
-            localStorage.setItem('database', JSON.stringify(DB))
-            setEdit(false)
-        })
     }
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -123,14 +111,14 @@ const Info = ({ feedUser, name, setName }) => {
     return (
         <Box>
             <div className={classes.info}>
-                <Typography variant="h3" component="div" gutterBottom className={classes.mainTitle}>
+                <Typography variant="h3" component="div" gutterBottom className={`${classes.mainTitle} + main-title`}>
                     Персональные данные
                 </Typography>
 
                 <div>
                     <Grid container columns={16} direction={column}>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={7}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={7}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Имя:
                             </Typography>
                             {
@@ -147,8 +135,8 @@ const Info = ({ feedUser, name, setName }) => {
                                     </span>
                             }
                         </Grid>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={9}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={9}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Дата рождения:
                             </Typography>
                             {
@@ -168,8 +156,8 @@ const Info = ({ feedUser, name, setName }) => {
                     </Grid>
 
                     <Grid container columns={16} direction={column}>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={8}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Пол:
                             </Typography>
                             <span>
@@ -205,8 +193,8 @@ const Info = ({ feedUser, name, setName }) => {
                                 }
                             </span>
                         </Grid>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={8}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Пароль:
                             </Typography>
                             {
@@ -226,8 +214,8 @@ const Info = ({ feedUser, name, setName }) => {
                     </Grid>
 
                     <Grid container columns={16} direction={column}>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={8}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Телефон:
                             </Typography>
                             {
@@ -244,8 +232,8 @@ const Info = ({ feedUser, name, setName }) => {
                                     </span>
                             }
                         </Grid>
-                        <Grid display='flex' alignItems='center' className={classes.blockData} item xs={8}>
-                            <Typography variant="overline" display="block" className={classes.title} gutterBottom>
+                        <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
+                            <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
                                 Почта:
                             </Typography>
                             {
@@ -270,7 +258,7 @@ const Info = ({ feedUser, name, setName }) => {
                         !edit ?
                             <Button onClick={() => setEdit(true)} variant="outlined">Изменить</Button>
                             :
-                            <Button onClick={changeData} variant="outlined">Сохранить</Button>
+                            <Button onClick={handleSubmit} variant="outlined">Сохранить</Button>
                     }
                 </div>
             </div>

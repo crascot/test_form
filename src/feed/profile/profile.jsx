@@ -4,11 +4,11 @@ import User from './user';
 import Info from './info';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@mui/material/Paper';
+import './profile.scss';
 
 const useStyles = makeStyles({
     profile: {
         maxWidth: 'max-content !important',
-        minWidth: 632,
         margin: '10% 0 0 0',
     },
     paper: {

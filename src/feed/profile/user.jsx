@@ -67,7 +67,7 @@ const User = ({ name }) => {
     }
 
     return (
-        <Card className={classes.user}>
+        <Card className={`${classes.user} + user`}>
             <Stack direction="row" alignItems="center" spacing={2}>
                 <label htmlFor="contained-button-file" className={classes.label}>
                     <Input id="contained-button-file" onChange={loadAvatar} multiple type="file" />
