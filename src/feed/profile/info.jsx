@@ -55,14 +55,14 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ feedUser, name, setName }) => {
+const Info = ({ feedUser, name, setName, showError }) => {
 
     const classes = useStyles();
 
     const [edit, setEdit] = useState(0)
-    const [column, setColumn] = useState('')
+    const [column, setColumn] = useState()
 
-    const filtered = DB.users.filter(user => user.name !== feedUser.name ? false : user)
+    const filtered = DB.users.filter(user => user.email !== feedUser.email ? false : user)
 
     const [birthday, setBirthday] = useState(feedUser.birthday)
     const [gender, setGender] = useState(feedUser.gender)
@@ -83,10 +83,11 @@ const Info = ({ feedUser, name, setName }) => {
                     if (phone) user.phone = phone
                     if (email) user.email = email
                 })
-                setEdit(false)
             }).then(() => {
                 localStorage.setItem('database', JSON.stringify(DB))
-            })
+                showError('none')('')
+                setEdit(false)
+            }).catch((text) => showError('flex')(text))
     }
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -125,14 +126,7 @@ const Info = ({ feedUser, name, setName }) => {
                                 edit ?
                                     <Input className={classes.input} value={name} onChange={(event) => setName(event.target.value)} />
                                     :
-                                    <span>
-                                        {
-                                            name ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={name}>{name}</Typography>
-                                                :
-                                                <Alert className={classes.alert} severity="error">Не указано</Alert>
-                                        }
-                                    </span>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={name}>{name}</Typography>
                             }
                         </Grid>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={9}>
@@ -201,14 +195,7 @@ const Info = ({ feedUser, name, setName }) => {
                                 edit ?
                                     <Input className={classes.input} value={password} onChange={(event) => setPassword(event.target.value)} />
                                     :
-                                    <span>
-                                        {
-                                            password ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={password}>{password}</Typography>
-                                                :
-                                                <Alert className={classes.alert} severity="error">Не указан</Alert>
-                                        }
-                                    </span>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={password}>{password}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -240,14 +227,7 @@ const Info = ({ feedUser, name, setName }) => {
                                 edit ?
                                     <Input className={classes.input} value={email} onChange={(event) => setEmail(event.target.value)} />
                                     :
-                                    <span>
-                                        {
-                                            email ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={email}>{email}</Typography>
-                                                :
-                                                <Alert className={classes.alert} severity="error">Не указана</Alert>
-                                        }
-                                    </span>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={email}>{email}</Typography>
                             }
                         </Grid>
                     </Grid>

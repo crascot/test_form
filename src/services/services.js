@@ -1,15 +1,15 @@
 export const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 export let DB = JSON.parse(localStorage.getItem('database'));
 
-export function SignIn(userName, userPassword) {
+export function SignIn(userEmail, userPassword) {
     return new Promise((resolve, reject) => {
-        if (!userName || +userName) {
-            reject(userName)
+        if (!userEmail || !reg.test(userEmail)) {
+            reject(userEmail)
         } else if (!userPassword || userPassword.length < 8) {
             reject(userPassword)
         } else {
             setTimeout(() => {
-                let findUser = DB.users.find(user => user.name === userName && user.password === userPassword)
+                let findUser = DB.users.find(user => user.email === userEmail && user.password === userPassword)
 
                 if (findUser) {
                     localStorage.setItem('id', findUser.id)
@@ -49,39 +49,30 @@ export function CheckIn(userName, userEmail, userPassword, confirmPassword) {
         }
     }).then((user) => {
         return new Promise((resolve, reject) => {
-            let duplicate = DB.users.find(user => user.email === userEmail)
+            let duplicate = DB.users.find(user => user.email === userEmail);
 
             if (duplicate) reject(alert('Данная почта занята'))
-            else {
-                localStorage.setItem('database', JSON.stringify(user))
-                DB.users.push(user)
-                localStorage.setItem('database', JSON.stringify(DB))
-                resolve()
-            }
+            else resolve(user)
         })
     })
 }
 
 export function changeData(userName, userBirthday, userGender, userPassword, userPhone, userEmail) {
     return new Promise((resolve, reject) => {
-        if (userName) {
-            if (!userName || +userName) reject(alert('Имя некорректно'))
-            else resolve(userName);
-        }
-        if (userBirthday) resolve(userBirthday)
-        if (userGender) resolve(userGender)
-        if (userPassword) {
-            if (userPassword.length > 7) resolve(userPassword)
-            else reject(alert('Пароль слишком короткий'))
-        }
-        if (userPhone) {
-            if (userPhone.length === 13 || 11) resolve(userPhone)
-            else reject(alert('Некорректный номер телефона'))
-        }
-        if (userEmail) {
-            if (reg.test(userEmail)) resolve(userEmail)
-            else reject(alert('Почта некорректна'))
-        }
+        let duplicate = DB.users.find(user => user.email === userEmail && user.id !== JSON.parse(localStorage.getItem('id')))
+
+        if (!userName || +userName) reject('Имя некорректно')
+        if (!userPassword || userPassword.length < 8) reject('Пароль слишком короткий')
+        if (userPhone < 11) reject('Некорректный номер телефона')
+        if (!userEmail || !reg.test(userEmail)) reject('Почта некорректна')
+        if (duplicate) reject('Данная почта занята')
+
+        resolve(userName);
+        resolve(userBirthday)
+        resolve(userGender)
+        resolve(userPassword)
+        resolve(userPhone)
+        resolve(userEmail)
     })
 }
 

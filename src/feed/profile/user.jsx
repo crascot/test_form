@@ -64,6 +64,7 @@ const User = ({ name }) => {
     const leave = () => {
         localStorage.removeItem('id')
         localStorage.removeItem('auth_token')
+        window.location.reload();
     }
 
     return (
@@ -100,14 +101,14 @@ const User = ({ name }) => {
                         <ListItemText>Посты</ListItemText>
                     </MenuItem>
                 </Link>
-                <a href="javascript:history.back()" onClick={leave} className={classes.link}>
+                <Link to='/' onClick={leave} className={classes.link}>
                     <MenuItem>
                         <ListItemIcon>
                             <LogoutIcon fontSize="small" />
                         </ListItemIcon>
                         <ListItemText>Выйти</ListItemText>
                     </MenuItem>
-                </a>
+                </Link>
             </MenuList>
         </Card>
     )

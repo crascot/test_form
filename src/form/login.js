@@ -12,16 +12,16 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { SignIn } from '../services/services';
+import { SignIn, reg } from '../services/services';
 
 
 const Login = ({
-  nickname, targetName,
+  email, targetEmail,
   password, targetPassword,
   disabled, setDisabled,
-  errorName, errorPassword,
-  helperTextName, helperTextPassword,
-  checkName, checkPassword,
+  errorEmail, errorPassword,
+  helperTextEmail, helperTextPassword,
+  checkEmail, checkPassword,
   show, showPassword,
   buttonStyle, setButtonStyle,
   clear, clearType }) => {
@@ -34,9 +34,8 @@ const Login = ({
 
   useEffect(() => {
     if (click === true) {
-      if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
-      else if (+nickname) checkName(true)('Имя не может состоять из цифр')
-      else checkName()()
+      if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
+      else checkEmail()()
 
       if (password.length < 8) {
         checkPassword(true)('Пароль слишкой короткий')
@@ -46,7 +45,6 @@ const Login = ({
         checkPassword()()
         setButtonStyle()
       }
-
     }
   })
 
@@ -54,15 +52,15 @@ const Login = ({
     setClick(true);
     setDisabled(true);
     setHide(null);
-    SignIn(nickname, password)
+    SignIn(email, password)
       .then(() => {
+        clear()
         localStorage.setItem('auth_token', true)
         setRedirect('/feed/posts')
-        clear()
       }).catch((props) => {
         switch (props) {
-          case nickname:
-            if (nickname === 0) checkName(true)('Пожалуйста введите ваше имя')
+          case email:
+            checkEmail()('Почта некорректна')
             break;
           case password:
             checkPassword(true)('Пароль слишкой короткий')
@@ -92,13 +90,13 @@ const Login = ({
         <Grid className={`form-register ${classes.body}`} container>
           <TextField
             fullWidth
-            label="Введите имя"
-            value={nickname}
-            onChange={targetName}
+            label="Введите почту"
+            value={email}
+            onChange={targetEmail}
             disabled={disabled}
             type='text'
-            error={errorName}
-            helperText={helperTextName}
+            error={errorEmail}
+            helperText={helperTextEmail}
           />
           <span>
             <TextField

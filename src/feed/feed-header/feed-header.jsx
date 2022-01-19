@@ -6,10 +6,7 @@ import {
     Button,
     TextField,
 } from '@material-ui/core';
-import {
-    Menu,
-    MenuItem
-} from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import { Redirect } from 'react-router';
 
 const useStyles = makeStyles({
@@ -36,7 +33,7 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch, setUserId, name }) => {
+const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -49,7 +46,7 @@ const FeedHeader = ({ setToken, search, setSearch, setUserId, name }) => {
     const profile = () => setRedirect('/profile')
     const leave = () => {
         setToken(localStorage.removeItem('auth_token'))
-        setUserId(localStorage.removeItem('id'))
+        localStorage.removeItem('id')
     }
 
     return (
@@ -68,7 +65,7 @@ const FeedHeader = ({ setToken, search, setSearch, setUserId, name }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {name}
+                        {findUser.name}
                     </Typography>
                 </Button>
                 <Menu

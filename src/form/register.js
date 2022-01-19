@@ -12,7 +12,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { CheckIn, reg } from '../services/services';
+import { CheckIn, reg, DB } from '../services/services';
 
 
 const Register = ({
@@ -66,9 +66,14 @@ const Register = ({
         setDisabled(true);
         setHide(null);
         CheckIn(nickname, email, password, confirmPassword)
-            .then(() => {
+            .then((user) => {
                 localStorage.setItem('auth_token', true)
                 localStorage.setItem('id', id)
+
+                localStorage.setItem('database', JSON.stringify(user))
+                DB.users.push(user)
+                localStorage.setItem('database', JSON.stringify(DB))
+
                 setRedirect('/feed/posts')
                 clear()
             }).catch((props) => {

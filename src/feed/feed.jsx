@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Box,
-    Container,
-} from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
+import { Box, Container } from '@material-ui/core';
 import FeedPost from './posts/posts';
 import FeedHeader from './feed-header/feed-header';
 import { FeedPush } from '../services/services';
 import PostCreate from './posts/posts-create';
 import Profile from './profile/profile';
 import { DB } from '../services/services';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 const Feed = () => {
-    const [userId, setUserId] = useState(JSON.parse(localStorage.getItem('id')))
+    // const [userId, setUserId] = useState(JSON.parse(localStorage.getItem('id')))
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
     const [search, setSearch] = useState('')
     const [posts, setPosts] = useState([])
 
-    let findUser = DB.users.find(user => user.id === userId)
+    let findUser = DB.users.find(user => user.id === JSON.parse(localStorage.getItem('id')))
     const [feedUser] = useState(findUser)
 
     useEffect(() => {
@@ -38,7 +34,7 @@ const Feed = () => {
                 <BrowserRouter basename='test_form/feed'>
                     <Switch>
                         <Route path='/posts' exact>
-                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} setUserId={setUserId} name={feedUser.name} />
+                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} findUser={findUser} />
                             <Container>
                                 <PostCreate posts={posts} setPosts={setPosts} />
                                 <FeedPost posts={posts} setPosts={setPosts} findPosts={findPosts} />
