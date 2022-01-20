@@ -9,7 +9,6 @@ import { DB } from '../services/services';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 const Feed = () => {
-    // const [userId, setUserId] = useState(JSON.parse(localStorage.getItem('id')))
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
     const [search, setSearch] = useState('')
     const [posts, setPosts] = useState([])

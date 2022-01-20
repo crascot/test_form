@@ -64,7 +64,7 @@ const User = ({ name }) => {
     const leave = () => {
         localStorage.removeItem('id')
         localStorage.removeItem('auth_token')
-        window.location.reload();
+        window.location.href = '/';
     }
 
     return (
