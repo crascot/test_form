@@ -32,7 +32,7 @@ const Register = ({
 
     const classes = useStyles()
 
-    const [hide, setHide] = useState(classes.hide)
+    const [hide, setHide] = useState('none')
     const [redirect, setRedirect] = useState('/register')
     const [click, setClick] = useState(false)
 
@@ -64,7 +64,7 @@ const Register = ({
 
         setClick(true);
         setDisabled(true);
-        setHide(null);
+        setHide('inherit');
         CheckIn(nickname, email, password, confirmPassword)
             .then((user) => {
                 localStorage.setItem('auth_token', true)
@@ -95,7 +95,7 @@ const Register = ({
             })
             .finally(() => {
                 setDisabled(false);
-                setHide(classes.hide);
+                setHide('none');
             })
     }
 
@@ -158,7 +158,7 @@ const Register = ({
                 </Grid>
                 <Grid className='form-register footer' container direction="row" justify="space-between">
                     <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' ><Redirect to={redirect} />Зарегистриговаться</Button >
-                    <CircularProgress id='loader' className={hide} />
+                    <CircularProgress id='loader' className='visible' style={{ display: hide }} />
                     <Button onClick={clear} disabled={disabled} >Очистить</Button>
                 </Grid>
             </Card>

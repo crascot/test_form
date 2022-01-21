@@ -39,8 +39,4 @@ export const useStyles = makeStyles({
   footer: {
     paddingTop: 10,
   },
-  hide: {
-    display: 'none',
-    margin: 30,
-  },
 })

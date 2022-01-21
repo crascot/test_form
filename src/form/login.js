@@ -28,7 +28,7 @@ const Login = ({
 
   const classes = useStyles()
 
-  const [hide, setHide] = useState(classes.hide)
+  const [hide, setHide] = useState('none')
   const [redirect, setRedirect] = useState('')
   const [click, setClick] = useState(false)
 
@@ -51,7 +51,7 @@ const Login = ({
   const handleSubmit = () => {
     setClick(true);
     setDisabled(true);
-    setHide(null);
+    setHide('inherit');
     SignIn(email, password)
       .then(() => {
         clear()
@@ -71,7 +71,7 @@ const Login = ({
       })
       .finally(() => {
         setDisabled(false);
-        setHide(classes.hide);
+        setHide('none');
       })
   }
 
@@ -121,7 +121,7 @@ const Login = ({
         </Grid>
         <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
           <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
-          <CircularProgress id='loader' className={`${hide} + visible`} />
+          <CircularProgress id='loader' className='visible' style={{ display: hide }} />
           <Button onClick={clear} type='submit' disabled={disabled}>Очистить</Button>
         </Grid>
       </Card>
