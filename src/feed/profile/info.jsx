@@ -110,13 +110,13 @@ const Info = ({ feedUser, name, setName, showError }) => {
     }, [])
 
     return (
-        <Box>
-            <div className={classes.info}>
+        <Box className={`${classes.info} + info`}>
+            <div>
                 <Typography variant="h3" component="div" gutterBottom className={`${classes.mainTitle} + main-title`}>
                     Персональные данные
                 </Typography>
 
-                <div>
+                <div className='container-data'>
                     <Grid container columns={16} direction={column}>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={7}>
                             <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>

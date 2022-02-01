@@ -67,12 +67,7 @@ export function changeData(userName, userBirthday, userGender, userPassword, use
         if (!userEmail || !reg.test(userEmail)) reject('Почта некорректна')
         if (duplicate) reject('Данная почта занята')
 
-        resolve(userName);
-        resolve(userBirthday)
-        resolve(userGender)
-        resolve(userPassword)
-        resolve(userPhone)
-        resolve(userEmail)
+        resolve(userName, userBirthday, userGender, userPassword, userPhone, userEmail);
     })
 }
 

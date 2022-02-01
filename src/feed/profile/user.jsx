@@ -36,7 +36,6 @@ const useStyles = makeStyles({
         maxWidth: '100%',
         overflow: 'hidden',
     },
-
     link: {
         textDecoration: 'none',
         color: 'inherit'
@@ -91,7 +90,7 @@ const User = ({ name }) => {
 
             <Divider />
 
-            <MenuList className={classes.option}>
+            <MenuList className={`${classes.option} + option`}>
                 <Link to='/posts' className={classes.link}>
                     <MenuItem>
                         <ListItemIcon>

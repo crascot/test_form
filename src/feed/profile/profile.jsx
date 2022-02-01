@@ -13,6 +13,7 @@ const useStyles = makeStyles({
         margin: '5% 0 0 0',
     },
     paper: {
+        overflow: 'hidden',
         marginTop: '5%',
         display: 'flex',
     }
@@ -33,7 +34,7 @@ const Profile = ({ feedUser }) => {
     return (
         <Container className={classes.profile}>
             <Alert severity='error' style={{display: display}}>{error}</Alert>
-            <Paper elevation={3} className={classes.paper}>
+            <Paper elevation={3} className={`${classes.paper} + paper`}>
                 <User name={name} />
                 <Info feedUser={feedUser} name={name} setName={setName} showError={showError} />
             </Paper>
