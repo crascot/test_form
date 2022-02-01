@@ -73,14 +73,14 @@ const Form = () => {
         <Switch>
           <Route path='/' exact>
             <Login
-              nickname={nickname} targetName={targetName}
+              email={email} targetEmail={targetEmail}
               password={password} targetPassword={targetPassword}
               disabled={disabled} setDisabled={setDisabled}
-              errorName={errorName} errorPassword={errorPassword}
-              helperTextName={helperTextName} helperTextPassword={helperTextPassword}
+              errorEmail={errorEmail} errorPassword={errorPassword}
+              helperTextEmail={helperTextEmail} helperTextPassword={helperTextPassword}
               show={show} showPassword={showPassword}
               buttonStyle={buttonStyle} setButtonStyle={setButtonStyle}
-              checkName={checkName} checkPassword={checkPassword}
+              checkEmail={checkEmail} checkPassword={checkPassword}
               clear={clear} clearType={clearType}
             />
           </Route>

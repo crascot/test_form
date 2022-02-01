@@ -6,10 +6,7 @@ import {
     Button,
     TextField,
 } from '@material-ui/core';
-import {
-    Menu,
-    MenuItem
-} from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import { Redirect } from 'react-router';
 
 const useStyles = makeStyles({
@@ -36,11 +33,10 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch }) => {
+const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [feedName] = useState(localStorage.getItem('userName'))
     const [redirect, setRedirect] = useState('/posts')
 
     const open = Boolean(anchorEl)
@@ -48,7 +44,10 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleClose = () => setAnchorEl(null)
     const profile = () => setRedirect('/profile')
-    const leave = () => setToken(localStorage.removeItem('auth_token'))
+    const leave = () => {
+        setToken(localStorage.removeItem('auth_token'))
+        localStorage.removeItem('id')
+    }
 
     return (
         <Box className={classes.block}>
@@ -66,7 +65,7 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {feedName}
+                        {findUser.name}
                     </Typography>
                 </Button>
                 <Menu

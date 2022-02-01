@@ -12,7 +12,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { CheckIn } from '../services/services';
+import { CheckIn, reg, DB } from '../services/services';
 
 
 const Register = ({
@@ -32,13 +32,11 @@ const Register = ({
 
     const classes = useStyles()
 
-    const [hide, setHide] = useState(classes.hide)
+    const [hide, setHide] = useState('none')
     const [redirect, setRedirect] = useState('/register')
     const [click, setClick] = useState(false)
 
     useEffect(() => {
-        const reg = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-
         if (click === true) {
             if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
             else if (+nickname) checkName(true)('Имя не может состоять из цифр')
@@ -62,13 +60,20 @@ const Register = ({
     })
 
     const handleSubmit = () => {
+        const id = JSON.parse(localStorage.getItem('database')).users.length
+
         setClick(true);
         setDisabled(true);
-        setHide(null);
+        setHide('inherit');
         CheckIn(nickname, email, password, confirmPassword)
-            .then(() => {
+            .then((user) => {
                 localStorage.setItem('auth_token', true)
-                localStorage.setItem('userName', nickname)
+                localStorage.setItem('id', id)
+
+                localStorage.setItem('database', JSON.stringify(user))
+                DB.users.push(user)
+                localStorage.setItem('database', JSON.stringify(DB))
+
                 setRedirect('/feed/posts')
                 clear()
             }).catch((props) => {
@@ -90,7 +95,7 @@ const Register = ({
             })
             .finally(() => {
                 setDisabled(false);
-                setHide(classes.hide);
+                setHide('none');
             })
     }
 
@@ -153,7 +158,7 @@ const Register = ({
                 </Grid>
                 <Grid className='form-register footer' container direction="row" justify="space-between">
                     <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' ><Redirect to={redirect} />Зарегистриговаться</Button >
-                    <CircularProgress id='loader' className={hide} />
+                    <CircularProgress id='loader' className='visible' style={{ display: hide }} />
                     <Button onClick={clear} disabled={disabled} >Очистить</Button>
                 </Grid>
             </Card>

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Box,
-    Container,
-} from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
+import { Box, Container } from '@material-ui/core';
 import FeedPost from './posts/posts';
 import FeedHeader from './feed-header/feed-header';
 import { FeedPush } from '../services/services';
 import PostCreate from './posts/posts-create';
 import Profile from './profile/profile';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { DB } from '../services/services';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 const Feed = () => {
-
-    const [posts, setPosts] = useState([])
     const [token, setToken] = useState(localStorage.getItem('auth_token'))
     const [search, setSearch] = useState('')
+    const [posts, setPosts] = useState([])
+
+    let findUser = DB.users.find(user => user.id === JSON.parse(localStorage.getItem('id')))
+    const [feedUser] = useState(findUser)
+
     useEffect(() => {
         FeedPush()
             .then((data) => {
@@ -33,14 +33,14 @@ const Feed = () => {
                 <BrowserRouter basename='test_form/feed'>
                     <Switch>
                         <Route path='/posts' exact>
-                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} />
+                            <FeedHeader setToken={setToken} search={search} setSearch={setSearch} findUser={findUser} />
                             <Container>
                                 <PostCreate posts={posts} setPosts={setPosts} />
                                 <FeedPost posts={posts} setPosts={setPosts} findPosts={findPosts} />
                             </Container>
                         </Route>
                         <Route path='/profile'>
-                            <Profile />
+                            <Profile feedUser={feedUser} />
                         </Route>
                     </Switch>
                 </BrowserRouter>

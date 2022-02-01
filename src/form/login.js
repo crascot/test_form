@@ -12,31 +12,30 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { SignIn } from '../services/services';
+import { SignIn, reg } from '../services/services';
 
 
 const Login = ({
-  nickname, targetName,
+  email, targetEmail,
   password, targetPassword,
   disabled, setDisabled,
-  errorName, errorPassword,
-  helperTextName, helperTextPassword,
-  checkName, checkPassword,
+  errorEmail, errorPassword,
+  helperTextEmail, helperTextPassword,
+  checkEmail, checkPassword,
   show, showPassword,
   buttonStyle, setButtonStyle,
   clear, clearType }) => {
 
   const classes = useStyles()
 
-  const [hide, setHide] = useState(classes.hide)
+  const [hide, setHide] = useState('none')
   const [redirect, setRedirect] = useState('')
   const [click, setClick] = useState(false)
 
   useEffect(() => {
     if (click === true) {
-      if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
-      else if (+nickname) checkName(true)('Имя не может состоять из цифр')
-      else checkName()()
+      if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
+      else checkEmail()()
 
       if (password.length < 8) {
         checkPassword(true)('Пароль слишкой короткий')
@@ -46,24 +45,22 @@ const Login = ({
         checkPassword()()
         setButtonStyle()
       }
-
     }
   })
 
   const handleSubmit = () => {
     setClick(true);
     setDisabled(true);
-    setHide(null);
-    SignIn(nickname, password)
+    setHide('inherit');
+    SignIn(email, password)
       .then(() => {
-        localStorage.setItem('auth_token', true)
-        localStorage.setItem('userName', nickname)
-        setRedirect('/feed/posts')
         clear()
+        localStorage.setItem('auth_token', true)
+        setRedirect('/feed/posts')
       }).catch((props) => {
         switch (props) {
-          case nickname:
-            if (nickname === 0) checkName(true)('Пожалуйста введите ваше имя')
+          case email:
+            checkEmail()('Почта некорректна')
             break;
           case password:
             checkPassword(true)('Пароль слишкой короткий')
@@ -74,7 +71,7 @@ const Login = ({
       })
       .finally(() => {
         setDisabled(false);
-        setHide(classes.hide);
+        setHide('none');
       })
   }
 
@@ -93,13 +90,13 @@ const Login = ({
         <Grid className={`form-register ${classes.body}`} container>
           <TextField
             fullWidth
-            label="Введите имя"
-            value={nickname}
-            onChange={targetName}
+            label="Введите почту"
+            value={email}
+            onChange={targetEmail}
             disabled={disabled}
             type='text'
-            error={errorName}
-            helperText={helperTextName}
+            error={errorEmail}
+            helperText={helperTextEmail}
           />
           <span>
             <TextField
@@ -124,7 +121,7 @@ const Login = ({
         </Grid>
         <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
           <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
-          <CircularProgress id='loader' className={`${hide} + visible`} />
+          <CircularProgress id='loader' className='visible' style={{ display: hide }} />
           <Button onClick={clear} type='submit' disabled={disabled}>Очистить</Button>
         </Grid>
       </Card>
