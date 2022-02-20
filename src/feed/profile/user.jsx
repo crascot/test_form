@@ -99,7 +99,7 @@ const User = ({ name }) => {
                         <ListItemText>Посты</ListItemText>
                     </MenuItem>
                 </Link>
-                <a href='javascript:history.back()' onClick={leave} className={classes.link}>
+                <a href='https://crascot.github.io/test_form/' onClick={leave} className={classes.link}>
                     <MenuItem>
                         <ListItemIcon>
                             <LogoutIcon fontSize="small" />

@@ -10,8 +10,9 @@ import {
     Alert,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { changeData, DB } from '../../services/services';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { change, editor } from '../../redux/profileSlice'
 
 
 const useStyles = makeStyles({
@@ -55,14 +56,13 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ feedUser, name, setName, showError }) => {
+const Info = ({ feedUser, name, setName }) => {
 
     const classes = useStyles();
+    const dispatch = useDispatch()
+    const edit = useSelector(state => state.profile.edit)
 
-    const [edit, setEdit] = useState(0)
     const [column, setColumn] = useState()
-
-    const filtered = DB.users.filter(user => user.email !== feedUser.email ? false : user)
 
     const [birthday, setBirthday] = useState(feedUser.birthday)
     const [gender, setGender] = useState(feedUser.gender)
@@ -71,24 +71,6 @@ const Info = ({ feedUser, name, setName, showError }) => {
     const [email, setEmail] = useState(feedUser.email)
 
     if (!gender) setGender('Мужской')
-
-    const handleSubmit = () => {
-        changeData(name, birthday, gender, password, phone, email)
-            .then(() => {
-                filtered.forEach(user => {
-                    if (name) user.name = name
-                    if (birthday) user.birthday = birthday
-                    if (gender) user.gender = gender
-                    if (password) user.password = password
-                    if (phone) user.phone = phone
-                    if (email) user.email = email
-                })
-            }).then(() => {
-                localStorage.setItem('database', JSON.stringify(DB))
-                showError('none')('')
-                setEdit(false)
-            }).catch((text) => showError('flex')(text))
-    }
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -236,9 +218,9 @@ const Info = ({ feedUser, name, setName, showError }) => {
                 <div className={classes.footer}>
                     {
                         !edit ?
-                            <Button onClick={() => setEdit(true)} variant="outlined">Изменить</Button>
+                            <Button onClick={() => dispatch(editor(true))} variant="outlined">Изменить</Button>
                             :
-                            <Button onClick={handleSubmit} variant="outlined">Сохранить</Button>
+                            <Button onClick={() => dispatch(change({ name, birthday, gender, password, phone, email }))} variant="outlined">Сохранить</Button>
                     }
                 </div>
             </div>
