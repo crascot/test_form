@@ -72,6 +72,9 @@ const Info = ({ feedUser, name, setName }) => {
 
     if (!gender) setGender('Мужской')
 
+    const dispatchEdit = () => dispatch(editor(true))
+    const dispatchChange = () => dispatch(change({ name, birthday, gender, password, phone, email }))
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -218,9 +221,9 @@ const Info = ({ feedUser, name, setName }) => {
                 <div className={classes.footer}>
                     {
                         !edit ?
-                            <Button onClick={() => dispatch(editor(true))} variant="outlined">Изменить</Button>
+                            <Button onClick={dispatchEdit} variant="outlined">Изменить</Button>
                             :
-                            <Button onClick={() => dispatch(change({ name, birthday, gender, password, phone, email }))} variant="outlined">Сохранить</Button>
+                            <Button onClick={dispatchChange} variant="outlined">Сохранить</Button>
                     }
                 </div>
             </div>
