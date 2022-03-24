@@ -46,7 +46,7 @@ const Input = styled('input')({
     display: 'none',
 });
 
-const User = ({ name }) => {
+const User = ({ userData }) => {
     const classes = useStyles();
 
     const [avatar, setAvatar] = useState(null)
@@ -56,7 +56,10 @@ const User = ({ name }) => {
 
         const reader = new FileReader()
 
-        reader.onload = e => setAvatar(e.target.result)
+        reader.onload = e => {
+            setAvatar(e.target.result)
+            console.log(e.target.result);
+        }
         reader.readAsDataURL(file)
     }
 
@@ -83,8 +86,13 @@ const User = ({ name }) => {
                 </label>
             </Stack>
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div" className={classes.name}>
-                    {name}
+                <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    className={classes.name}
+                >
+                    {userData.nickname}
                 </Typography>
             </CardContent>
 

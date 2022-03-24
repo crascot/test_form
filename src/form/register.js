@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Button,
     Card,
@@ -12,92 +12,17 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { CheckIn, reg, DB } from '../services/services';
+import { useDispatch } from 'react-redux'
+import { getRegister, setName, setEmail, setPassword, setConfirmPassword, clear, clearType } from '../redux/features/form/formSlice';
 
 
 const Register = ({
-    nickname, targetName,
-    email, targetEmail,
-    password, targetPassword,
-    confirmPassword, targetConfirmPassword,
-    disabled, setDisabled,
-    errorName, errorEmail,
-    errorPassword, errorConfirmPassword,
-    helperTextName, helperTextEmail,
-    helperTextPassword, helperConfirmPassword,
-    checkName, checkEmail, checkPassword, checkConfirmPassword,
+    loading, formInputs, errors,
     show, showPassword,
-    buttonStyle, setButtonStyle,
-    clear, clearType }) => {
+    buttonStyle }) => {
 
     const classes = useStyles()
-
-    const [hide, setHide] = useState('none')
-    const [redirect, setRedirect] = useState('/register')
-    const [click, setClick] = useState(false)
-
-    useEffect(() => {
-        if (click === true) {
-            if (!nickname) checkName(true)('Пожалуйста введите ваше имя')
-            else if (+nickname) checkName(true)('Имя не может состоять из цифр')
-            else checkName()()
-
-            if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
-            else checkEmail()()
-
-            if (password.length < 8) {
-                checkPassword(true)('Пароль слишкой короткий')
-                setButtonStyle(27)
-            }
-            else {
-                checkPassword()()
-                setButtonStyle()
-            }
-
-            if (password !== confirmPassword) checkConfirmPassword(true)('Пароли не совпадают')
-            else checkConfirmPassword()()
-        }
-    })
-
-    const handleSubmit = () => {
-        const id = JSON.parse(localStorage.getItem('database')).users.length
-
-        setClick(true);
-        setDisabled(true);
-        setHide('inherit');
-        CheckIn(nickname, email, password, confirmPassword)
-            .then((user) => {
-                localStorage.setItem('auth_token', true)
-                localStorage.setItem('id', id)
-
-                localStorage.setItem('database', JSON.stringify(user))
-                DB.users.push(user)
-                localStorage.setItem('database', JSON.stringify(DB))
-
-                setRedirect('/feed/posts')
-                clear()
-            }).catch((props) => {
-                switch (props) {
-                    case nickname:
-                        if (nickname === 0) checkName(true)('Пожалуйста введите ваше имя')
-                        break;
-                    case email:
-                        checkEmail()('Почта некорректна')
-                        break;
-                    case password:
-                        if (password !== confirmPassword) {
-                            checkPassword(true)('Пароль слишкой короткий')
-                            checkConfirmPassword(true)('Пароли не совпадают')
-                        }
-
-                    // no default
-                }
-            })
-            .finally(() => {
-                setDisabled(false);
-                setHide('none');
-            })
-    }
+    const dispatch = useDispatch()
 
     return (
         <Container maxWidth='sm'>
@@ -105,61 +30,66 @@ const Register = ({
                 <Grid className='form-register head' container direction="row" justify="space-between">
                     <Typography variant='h5'>Зарегистриговаться</Typography>
                     <Typography variant='h5'>или</Typography>
-                    <Link to='/' onClick={clear} style={{ textDecoration: 'none' }}><Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">Войти</Button></Link>
+                    <Link to='/' onClick={() => dispatch(clear())} style={{ textDecoration: 'none' }}><Button className={classes.register} onClick={() => dispatch(clearType())} disabled={loading.disabled} variant="outlined" color="primary">Войти</Button></Link>
                 </Grid>
                 <Grid className={`form-register ${classes.body}`} container>
                     <TextField
+                        fullWidth
                         label="Введите имя"
-                        value={nickname}
-                        onChange={targetName}
-                        disabled={disabled}
-                        fullWidth type='text'
-                        error={errorName}
-                        helperText={helperTextName}
+                        value={formInputs.nickname}
+                        onChange={(e) => dispatch(setName(e.target.value))}
+                        disabled={loading.disabled}
+                        error={errors.errorName}
+                        helperText={errors.nameText}
                     />
                     <TextField
-                        label="Введите вашу почту"
-                        value={email}
-                        onChange={targetEmail}
-                        disabled={disabled}
-                        fullWidth type='email'
-                        error={errorEmail}
-                        helperText={helperTextEmail}
+                        fullWidth
+                        label="Введите почту"
+                        value={formInputs.email}
+                        onChange={(e) => dispatch(setEmail(e.target.value))}
+                        disabled={loading.disabled}
+                        type='email'
+                        error={errors.errorEmail}
+                        helperText={errors.emailText}
                     />
                     <span>
                         <TextField
                             fullWidth
                             label="Введите пароль"
-                            value={password}
-                            onChange={targetPassword}
-                            disabled={disabled}
+                            value={formInputs.password}
+                            onChange={(e) => dispatch(setPassword(e.target.value))}
+                            disabled={loading.disabled}
                             type={show === true ? 'text' : 'password'}
-                            error={errorPassword}
-                            helperText={helperTextPassword}
+                            error={errors.errorPassword}
+                            helperText={errors.passwordText}
                         />
                         <Button
                             className={classes.showPasswordButton}
                             onClick={showPassword}
-                            disabled={disabled}
+                            disabled={loading.disabled}
                             style={{ marginBottom: buttonStyle }}
                         >
-                            {show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                            {show ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </Button>
                     </span>
                     <TextField
+                        fullWidth
                         label="Подтвердите пароль"
-                        value={confirmPassword}
-                        onChange={targetConfirmPassword}
-                        disabled={disabled} fullWidth
+                        value={formInputs.confirmPassword}
+                        onChange={(e) => dispatch(setConfirmPassword(e.target.value))}
+                        disabled={loading.disabled}
                         type={show === true ? 'text' : 'password'}
-                        error={errorConfirmPassword}
-                        helperText={helperConfirmPassword}
+                        error={errors.errorConfirmPassword}
+                        helperText={errors.confirmPasswordText}
                     />
                 </Grid>
                 <Grid className='form-register footer' container direction="row" justify="space-between">
-                    <Button id='register' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit' ><Redirect to={redirect} />Зарегистриговаться</Button >
-                    <CircularProgress id='loader' className='visible' style={{ display: hide }} />
-                    <Button onClick={clear} disabled={disabled} >Очистить</Button>
+                    <Button id='register' size="small" disabled={loading.disabled} variant="contained" onClick={() => dispatch(getRegister(formInputs))} type='submit' >
+                        <Redirect to={loading.redirect === false ? '/register' : '/feed/posts'} />
+                        Зарегистриговаться
+                    </Button >
+                    <CircularProgress id='loader' className='visible' style={{ display: loading.loader }} />
+                    <Button onClick={() => dispatch(clear())} disabled={loading.disabled} >Очистить</Button>
                 </Grid>
             </Card>
         </Container>

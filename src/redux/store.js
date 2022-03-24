@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import profileReducer from './profileSlice'
+import formSlice from './features/form/formSlice'
+import profileReducer from './features/profile/profileSlice'
 
 export default configureStore({
   reducer: {
-    profile: profileReducer
+    profile: profileReducer,
+    form: formSlice,
   }
 })

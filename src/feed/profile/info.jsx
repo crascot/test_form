@@ -10,9 +10,9 @@ import {
     Alert,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { change, editor } from '../../redux/profileSlice'
+import { getChange, editor, setEmail } from '../../redux/features/profile/profileSlice';
+import { setName, setBirthday, setGender, setPassword, setPhone } from '../../redux/features/profile/profileSlice';
 
 
 const useStyles = makeStyles({
@@ -56,43 +56,26 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ feedUser, name, setName }) => {
+const Info = ({ userData, user, column }) => {
 
-    const classes = useStyles();
+    const classes = useStyles()
     const dispatch = useDispatch()
     const edit = useSelector(state => state.profile.edit)
 
-    const [column, setColumn] = useState()
-
-    const [birthday, setBirthday] = useState(feedUser.birthday)
-    const [gender, setGender] = useState(feedUser.gender)
-    const [password, setPassword] = useState(feedUser.password)
-    const [phone, setPhone] = useState(feedUser.phone)
-    const [email, setEmail] = useState(feedUser.email)
-
-    if (!gender) setGender('Мужской')
-
-    const dispatchEdit = () => dispatch(editor(true))
-    const dispatchChange = () => dispatch(change({ name, birthday, gender, password, phone, email }))
-
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    }
+    const handleClick = (event) => setAnchorEl(event.currentTarget)
+
+    if (!userData.gender) dispatch(setGender('Мужской'))
     const handleClose = () => setAnchorEl(null);
     const changeGenderMen = () => {
         setAnchorEl(null);
-        setGender('Мужской')
+        dispatch(setGender('Мужской'))
     }
     const changeGenderWomen = () => {
         setAnchorEl(null);
-        setGender('Женский')
+        dispatch(setGender('Женский'))
     }
-
-    useEffect(() => {
-        if (window.innerWidth <= 883) setColumn('column');
-    }, [])
 
     return (
         <Box className={`${classes.info} + info`}>
@@ -109,9 +92,9 @@ const Info = ({ feedUser, name, setName }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={name} onChange={(event) => setName(event.target.value)} />
+                                    <Input className={classes.input} value={userData.nickname} onChange={(e) => dispatch(setName(e.target.value))} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={name}>{name}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={userData.nickname}>{userData.nickname}</Typography>
                             }
                         </Grid>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={9}>
@@ -120,12 +103,12 @@ const Info = ({ feedUser, name, setName }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={birthday} onChange={(event) => setBirthday(event.target.value)} type='date' />
+                                    <Input className={classes.input} value={userData.birthday} onChange={(e) => dispatch(setBirthday(e.target.value))} type='date' />
                                     :
                                     <span>
                                         {
-                                            birthday ?
-                                                <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={birthday}>{birthday}</Typography>
+                                            user.birthday ?
+                                                <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={userData.birthday}>{userData.birthday}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указано</Alert>
                                         }
@@ -152,7 +135,7 @@ const Info = ({ feedUser, name, setName }) => {
                                                 aria-expanded={open ? 'true' : undefined}
                                                 onClick={handleClick}
                                             >
-                                                {gender}
+                                                {userData.gender}
                                             </Button>
                                             <Menu
                                                 id="basic-menu"
@@ -168,7 +151,7 @@ const Info = ({ feedUser, name, setName }) => {
                                             </Menu>
                                         </div>
                                         :
-                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={gender}>{gender}</Typography>
+                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={userData.gender}>{userData.gender}</Typography>
                                 }
                             </span>
                         </Grid>
@@ -178,9 +161,9 @@ const Info = ({ feedUser, name, setName }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={password} onChange={(event) => setPassword(event.target.value)} />
+                                    <Input className={classes.input} value={userData.password} onChange={(e) => dispatch(setPassword(e.target.value))} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={password}>{password}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={userData.password}>{userData.password}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -192,12 +175,12 @@ const Info = ({ feedUser, name, setName }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={phone} onChange={(event) => setPhone(event.target.value)} />
+                                    <Input className={classes.input} value={userData.phone} onChange={(e) => dispatch(setPhone(e.target.value))} />
                                     :
                                     <span>
                                         {
-                                            phone ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={phone}>{phone}</Typography>
+                                            user.phone ?
+                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={userData.phone}>{userData.phone}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указан</Alert>
                                         }
@@ -210,9 +193,9 @@ const Info = ({ feedUser, name, setName }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={email} onChange={(event) => setEmail(event.target.value)} />
+                                    <Input className={classes.input} value={userData.email} onChange={(e) => dispatch(setEmail(e.target.value))} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={email}>{email}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={userData.email}>{userData.email}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -220,10 +203,10 @@ const Info = ({ feedUser, name, setName }) => {
 
                 <div className={classes.footer}>
                     {
-                        !edit ?
-                            <Button onClick={dispatchEdit} variant="outlined">Изменить</Button>
+                        edit ?
+                            <Button onClick={() => dispatch(getChange(userData))} variant="outlined">Сохранить</Button>
                             :
-                            <Button onClick={dispatchChange} variant="outlined">Сохранить</Button>
+                            <Button onClick={() => dispatch(editor(true))} variant="outlined">Изменить</Button>
                     }
                 </div>
             </div>

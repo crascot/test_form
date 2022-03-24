@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import User from './user';
 import Info from './info';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@mui/material/Paper';
 import './profile.scss';
+import { Alert } from '@mui/material';
+import { useSelector } from 'react-redux';
+
 
 const useStyles = makeStyles({
     profile: {
@@ -18,16 +21,27 @@ const useStyles = makeStyles({
     }
 });
 
-const Profile = ({ feedUser }) => {
-    const classes = useStyles();
+const Profile = ({ user, userData }) => {
+    const classes = useStyles()
+    const [column, setColumn] = useState()
+    const error = useSelector(state => state.profile.error)
 
-    const [name, setName] = useState(feedUser.name)
+    const [display, setDisplay] = useState('none')
+
+    useEffect(() => {
+        if (window.innerWidth <= 883) setColumn('column')
+        if(error) setDisplay('flex')
+    }, [column, error, setDisplay])
 
     return (
         <Container className={classes.profile}>
+            <Alert variant="filled" severity="error" style={{display: display}}>
+                {error}
+            </Alert>
+
             <Paper elevation={3} className={`${classes.paper} + paper`}>
-                <User name={name} />
-                <Info feedUser={feedUser} name={name} setName={setName} />
+                <User userData={userData} />
+                <Info userData={userData} user={user} column={column} />
             </Paper>
         </Container>
     )
