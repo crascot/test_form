@@ -10,7 +10,7 @@ const initialState = {
   phone: '',
   email: '',
 
-  editor: '',
+  editor: null,
 }
 
 export const getChange = createAsyncThunk(
@@ -38,6 +38,7 @@ export const getChange = createAsyncThunk(
         }
 
         localStorage.setItem('database', JSON.stringify(updateDB));
+        dispatch(error(null))
       })
       .catch((text) => dispatch(error(text)))
   }

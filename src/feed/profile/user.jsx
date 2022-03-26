@@ -56,10 +56,7 @@ const User = ({ userData }) => {
 
         const reader = new FileReader()
 
-        reader.onload = e => {
-            setAvatar(e.target.result)
-            console.log(e.target.result);
-        }
+        reader.onload = e => setAvatar(e.target.result)
         reader.readAsDataURL(file)
     }
 

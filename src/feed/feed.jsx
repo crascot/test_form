@@ -44,7 +44,7 @@ const Feed = () => {
         dispatch(setPassword(user.password))
         dispatch(setPhone(user.phone))
         dispatch(setEmail(user.email))
-    }, [dispatch, user.birthday, user.email, user.gender, user.name, user.password, user.phone])
+    }, [dispatch, user.name, user.birthday, user.gender, user.password, user.phone, user.email])
 
     if (token) {
         return (
@@ -59,7 +59,7 @@ const Feed = () => {
                             </Container>
                         </Route>
                         <Route path='/profile'>
-                            <Profile user={user} userData={userData} />
+                            <Profile userData={userData} />
                         </Route>
                     </Switch>
                 </BrowserRouter>

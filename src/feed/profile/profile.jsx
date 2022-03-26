@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     }
 });
 
-const Profile = ({ user, userData }) => {
+const Profile = ({ userData }) => {
     const classes = useStyles()
     const [column, setColumn] = useState()
     const error = useSelector(state => state.profile.error)
@@ -30,18 +30,19 @@ const Profile = ({ user, userData }) => {
 
     useEffect(() => {
         if (window.innerWidth <= 883) setColumn('column')
-        if(error) setDisplay('flex')
+        if (error) setDisplay('flex')
+        else setDisplay('none')
     }, [column, error, setDisplay])
 
     return (
         <Container className={classes.profile}>
-            <Alert variant="filled" severity="error" style={{display: display}}>
+            <Alert variant="filled" severity="error" style={{ display: display }}>
                 {error}
             </Alert>
 
             <Paper elevation={3} className={`${classes.paper} + paper`}>
                 <User userData={userData} />
-                <Info userData={userData} user={user} column={column} />
+                <Info userData={userData} column={column} />
             </Paper>
         </Container>
     )

@@ -56,7 +56,7 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ userData, user, column }) => {
+const Info = ({ userData, column }) => {
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -107,7 +107,7 @@ const Info = ({ userData, user, column }) => {
                                     :
                                     <span>
                                         {
-                                            user.birthday ?
+                                            userData.birthday ?
                                                 <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={userData.birthday}>{userData.birthday}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указано</Alert>
@@ -116,7 +116,6 @@ const Info = ({ userData, user, column }) => {
                             }
                         </Grid>
                     </Grid>
-
                     <Grid container columns={16} direction={column}>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
                             <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
@@ -179,7 +178,7 @@ const Info = ({ userData, user, column }) => {
                                     :
                                     <span>
                                         {
-                                            user.phone ?
+                                            userData.phone ?
                                                 <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={userData.phone}>{userData.phone}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указан</Alert>
