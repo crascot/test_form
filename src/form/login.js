@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Button,
   Grid,
@@ -12,68 +12,22 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link, Redirect } from 'react-router-dom';
 import { useStyles } from './styles/styles';
-import { SignIn, reg } from '../services/services';
+import { useDispatch } from 'react-redux'
+import { getLogin, setEmail, setPassword, clear, clearType } from '../redux/features/form/formSlice';
 
 
 const Login = ({
-  email, targetEmail,
-  password, targetPassword,
-  disabled, setDisabled,
-  errorEmail, errorPassword,
-  helperTextEmail, helperTextPassword,
-  checkEmail, checkPassword,
-  show, showPassword,
-  buttonStyle, setButtonStyle,
-  clear, clearType }) => {
+  form, show,
+  showPassword, buttonStyle, }) => {
 
   const classes = useStyles()
+  const dispatch = useDispatch()
 
-  const [hide, setHide] = useState('none')
-  const [redirect, setRedirect] = useState('')
-  const [click, setClick] = useState(false)
-
-  useEffect(() => {
-    if (click === true) {
-      if (!email || !reg.test(email)) checkEmail(true)('Почта некорректна')
-      else checkEmail()()
-
-      if (password.length < 8) {
-        checkPassword(true)('Пароль слишкой короткий')
-        setButtonStyle(27);
-      }
-      else {
-        checkPassword()()
-        setButtonStyle()
-      }
-    }
-  })
-
-  const handleSubmit = () => {
-    setClick(true);
-    setDisabled(true);
-    setHide('inherit');
-    SignIn(email, password)
-      .then(() => {
-        clear()
-        localStorage.setItem('auth_token', true)
-        setRedirect('/feed/posts')
-      }).catch((props) => {
-        switch (props) {
-          case email:
-            checkEmail()('Почта некорректна')
-            break;
-          case password:
-            checkPassword(true)('Пароль слишкой короткий')
-            break;
-
-          // no default
-        }
-      })
-      .finally(() => {
-        setDisabled(false);
-        setHide('none');
-      })
-  }
+  const dispatchGetLogin = () => dispatch(getLogin(form))
+  const dispatchSetEmail = (e) => dispatch(setEmail(e.target.value))
+  const dispatchSetPassword = (e) => dispatch(setPassword(e.target.value))
+  const dispatchClear = () => dispatch(clear())
+  const dispatchClearType = () => dispatch(clearType())
 
   return (
     <Container maxWidth='sm'>
@@ -81,48 +35,53 @@ const Login = ({
         <Grid className='form-register head' container direction="row" justify="space-between">
           <Typography variant='h5'>Войти в систему</Typography>
           <Typography variant='h5'>или</Typography>
-          <Link to='/register' onClick={clear} style={{ textDecoration: 'none' }}>
-            <Button className={classes.register} onClick={clearType} disabled={disabled} variant="outlined" color="primary">
-              Зарегистриговаться
-            </Button>
-          </Link>
+          <span onClick={dispatchClear}>
+            <Link to='/register' style={{ textDecoration: 'none' }}>
+              <Button className={classes.register} onClick={dispatchClearType} disabled={form.disabled} variant="outlined" color="primary">
+                Зарегистриговаться
+              </Button>
+            </Link>
+          </span>
         </Grid>
         <Grid className={`form-register ${classes.body}`} container>
           <TextField
             fullWidth
             label="Введите почту"
-            value={email}
-            onChange={targetEmail}
-            disabled={disabled}
-            type='text'
-            error={errorEmail}
-            helperText={helperTextEmail}
+            value={form.email}
+            onChange={dispatchSetEmail}
+            disabled={form.disabled}
+            type='email'
+            error={form.errorEmail}
+            helperText={form.emailText}
           />
           <span>
             <TextField
               fullWidth
               label="Введите пароль"
-              value={password}
-              onChange={targetPassword}
-              disabled={disabled}
-              type={show === true ? 'text' : 'password'}
-              error={errorPassword}
-              helperText={helperTextPassword}
+              value={form.password}
+              onChange={dispatchSetPassword}
+              disabled={form.disabled}
+              type={show ? 'text' : 'password'}
+              error={form.errorPassword}
+              helperText={form.passwordText}
             />
             <Button
               className={classes.showPasswordButton}
               onClick={showPassword}
-              disabled={disabled}
+              disabled={form.disabled}
               style={{ marginBottom: buttonStyle }}
             >
-              {show === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              {show ? <VisibilityOffIcon /> : <VisibilityIcon />}
             </Button>
           </span>
         </Grid>
         <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
-          <Button id='login' size="small" disabled={disabled} variant="contained" onClick={handleSubmit} type='submit'><Redirect to={redirect} />Войти</Button>
-          <CircularProgress id='loader' className='visible' style={{ display: hide }} />
-          <Button onClick={clear} type='submit' disabled={disabled}>Очистить</Button>
+          <Button id='login' size="small" disabled={form.disabled} variant="contained" onClick={dispatchGetLogin} type='submit'>
+            <Redirect to={!form.redirect ? '/' : '/feed/posts'} />
+            Войти
+          </Button>
+          <CircularProgress id='loader' className='visible' style={{ display: form.loader }} />
+          <Button onClick={dispatchClear} type='submit' disabled={form.disabled}>Очистить</Button>
         </Grid>
       </Card>
     </Container>

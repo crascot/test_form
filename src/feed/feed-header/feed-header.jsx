@@ -9,6 +9,7 @@ import {
 import { Menu, MenuItem } from '@mui/material';
 import { Redirect } from 'react-router';
 
+
 const useStyles = makeStyles({
     block: {
         width: '100%',
@@ -30,10 +31,14 @@ const useStyles = makeStyles({
     },
     name: {
         fontSize: 25
+    },
+    link: {
+        textDecoration: 'none',
+        color: 'inherit'
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
+const FeedHeader = ({ search, setSearch, currentUser }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -45,7 +50,7 @@ const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
     const handleClose = () => setAnchorEl(null)
     const profile = () => setRedirect('/profile')
     const leave = () => {
-        setToken(localStorage.removeItem('auth_token'))
+        localStorage.removeItem('auth_token')
         localStorage.removeItem('id')
     }
 
@@ -65,7 +70,7 @@ const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {findUser.name}
+                        {currentUser.name}
                     </Typography>
                 </Button>
                 <Menu
@@ -78,7 +83,7 @@ const FeedHeader = ({ setToken, search, setSearch, findUser }) => {
                     }}
                 >
                     <MenuItem onClick={profile}><Redirect to={redirect} />Профиль</MenuItem>
-                    <MenuItem onClick={leave}>Выйти</MenuItem>
+                    <a href='https://crascot.github.io/test_form/' onClick={leave} className={classes.link}><MenuItem onClick={leave}>Выйти</MenuItem></a>
                 </Menu>
             </div>
         </Box>

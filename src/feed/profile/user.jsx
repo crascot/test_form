@@ -46,7 +46,7 @@ const Input = styled('input')({
     display: 'none',
 });
 
-const User = ({ name }) => {
+const User = ({ newUser }) => {
     const classes = useStyles();
 
     const [avatar, setAvatar] = useState(null)
@@ -83,8 +83,13 @@ const User = ({ name }) => {
                 </label>
             </Stack>
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div" className={classes.name}>
-                    {name}
+                <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    className={classes.name}
+                >
+                    {newUser.nickname}
                 </Typography>
             </CardContent>
 
@@ -99,7 +104,7 @@ const User = ({ name }) => {
                         <ListItemText>Посты</ListItemText>
                     </MenuItem>
                 </Link>
-                <a href='javascript:history.back()' onClick={leave} className={classes.link}>
+                <a href='https://crascot.github.io/test_form/' onClick={leave} className={classes.link}>
                     <MenuItem>
                         <ListItemIcon>
                             <LogoutIcon fontSize="small" />
