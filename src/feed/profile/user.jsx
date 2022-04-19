@@ -46,7 +46,7 @@ const Input = styled('input')({
     display: 'none',
 });
 
-const User = ({ userData }) => {
+const User = ({ newUser }) => {
     const classes = useStyles();
 
     const [avatar, setAvatar] = useState(null)
@@ -89,7 +89,7 @@ const User = ({ userData }) => {
                     component="div"
                     className={classes.name}
                 >
-                    {userData.nickname}
+                    {newUser.nickname}
                 </Typography>
             </CardContent>
 

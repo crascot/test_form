@@ -7,16 +7,20 @@ import PostCreate from './posts/posts-create';
 import Profile from './profile/profile';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setName, setBirthday, setGender, setPassword, setPhone, setEmail } from '../redux/features/profile/profileSlice';
+import { setUser } from '../redux/features/profile/profileSlice';
 
 
 const Feed = () => {
-    const user = DB.users.find(user => user.id === JSON.parse(localStorage.getItem('id')))
+    const currentUser = DB.users.find(user => user.id === JSON.parse(localStorage.getItem('id')))
     const dispatch = useDispatch()
 
     const [token] = useState(localStorage.getItem('auth_token'))
+    // const token = useSelector(state => state.profile.token) не убирать
+
     const [search, setSearch] = useState('')
     const [posts, setPosts] = useState([])
+
+    const profile = useSelector(state => state.profile)
 
     useEffect(() => {
         FeedPush()
@@ -28,23 +32,9 @@ const Feed = () => {
         return post.title.toLowerCase().includes(search.toLocaleLowerCase())
     })
 
-    const userData = {
-        nickname: useSelector(state => state.profile.nickname),
-        birthday: useSelector(state => state.profile.birthday),
-        gender: useSelector(state => state.profile.gender),
-        password: useSelector(state => state.profile.password),
-        phone: useSelector(state => state.profile.phone),
-        email: useSelector(state => state.profile.email)
-    }
-
     useEffect(() => {
-        dispatch(setName(user.name))
-        dispatch(setBirthday(user.birthday))
-        dispatch(setGender(user.gender))
-        dispatch(setPassword(user.password))
-        dispatch(setPhone(user.phone))
-        dispatch(setEmail(user.email))
-    }, [dispatch, user.name, user.birthday, user.gender, user.password, user.phone, user.email])
+        dispatch(setUser(currentUser))
+    }, [dispatch, currentUser])
 
     if (token) {
         return (
@@ -52,14 +42,14 @@ const Feed = () => {
                 <BrowserRouter basename='test_form/feed'>
                     <Switch>
                         <Route path='/posts' exact>
-                            <FeedHeader search={search} setSearch={setSearch} userData={userData} />
+                            <FeedHeader search={search} setSearch={setSearch} currentUser={currentUser} />
                             <Container>
                                 <PostCreate posts={posts} setPosts={setPosts} />
                                 <FeedPost posts={posts} setPosts={setPosts} findPosts={findPosts} />
                             </Container>
                         </Route>
                         <Route path='/profile'>
-                            <Profile userData={userData} />
+                            <Profile profile={profile} />
                         </Route>
                     </Switch>
                 </BrowserRouter>

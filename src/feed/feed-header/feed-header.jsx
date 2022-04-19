@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     }
 });
 
-const FeedHeader = ({ search, setSearch, userData }) => {
+const FeedHeader = ({ search, setSearch, currentUser }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -70,7 +70,7 @@ const FeedHeader = ({ search, setSearch, userData }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {userData.nickname}
+                        {currentUser.name}
                     </Typography>
                 </Button>
                 <Menu

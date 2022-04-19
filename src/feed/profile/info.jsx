@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Grid,
     Box,
     Typography,
     Button,
-    Menu,
+    Select,
     MenuItem,
     Input,
     Alert,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux'
-import { getChange, editor, setEmail } from '../../redux/features/profile/profileSlice';
-import { setName, setBirthday, setGender, setPassword, setPhone } from '../../redux/features/profile/profileSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getChange, editor } from '../../redux/features/profile/profileSlice';
+import { setUser } from '../../redux/features/profile/profileSlice';
 
 
 const useStyles = makeStyles({
@@ -56,26 +56,13 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ userData, column }) => {
+const Info = ({ newUser, column }) => {
 
     const classes = useStyles()
     const dispatch = useDispatch()
     const edit = useSelector(state => state.profile.edit)
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => setAnchorEl(event.currentTarget)
-
-    if (!userData.gender) dispatch(setGender('Мужской'))
-    const handleClose = () => setAnchorEl(null);
-    const changeGenderMen = () => {
-        setAnchorEl(null);
-        dispatch(setGender('Мужской'))
-    }
-    const changeGenderWomen = () => {
-        setAnchorEl(null);
-        dispatch(setGender('Женский'))
-    }
+    const updateData = (key) => (e) => dispatch(setUser({ ...newUser, [key]: e.target.value }))
 
     return (
         <Box className={`${classes.info} + info`}>
@@ -92,9 +79,9 @@ const Info = ({ userData, column }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={userData.nickname} onChange={(e) => dispatch(setName(e.target.value))} />
+                                    <Input className={classes.input} value={newUser.name} onChange={updateData('name')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={userData.nickname}>{userData.nickname}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} component="p" key={newUser.name} gutterBottom>{newUser.name}</Typography>
                             }
                         </Grid>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={9}>
@@ -103,12 +90,12 @@ const Info = ({ userData, column }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={userData.birthday} onChange={(e) => dispatch(setBirthday(e.target.value))} type='date' />
+                                    <Input className={classes.input} value={newUser.birthday} onChange={updateData('birthday')} type='date' />
                                     :
                                     <span>
                                         {
-                                            userData.birthday ?
-                                                <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={userData.birthday}>{userData.birthday}</Typography>
+                                            newUser.birthday ?
+                                                <Typography variant="h6" style={{ marginBottom: 4 }} component="p" key={newUser.birthday} gutterBottom>{newUser.birthday}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указано</Alert>
                                         }
@@ -124,33 +111,12 @@ const Info = ({ userData, column }) => {
                             <span>
                                 {
                                     edit ?
-                                        <div>
-                                            <Button
-                                                style={{ width: 'max-content', marginTop: '-4px' }}
-                                                variant="outlined"
-                                                id="basic-button"
-                                                aria-controls={open ? 'basic-menu' : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
-                                            >
-                                                {userData.gender}
-                                            </Button>
-                                            <Menu
-                                                id="basic-menu"
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
-                                                MenuListProps={{
-                                                    'aria-labelledby': 'basic-button',
-                                                }}
-                                            >
-                                                <MenuItem onClick={changeGenderMen}>Мужской</MenuItem>
-                                                <MenuItem onClick={changeGenderWomen}>Женский</MenuItem>
-                                            </Menu>
-                                        </div>
+                                        <Select value={newUser.gender} onChange={updateData('gender')}>
+                                            <MenuItem value={'Мужской'}>Мужской</MenuItem>
+                                            <MenuItem value={'Женский'}>Женский</MenuItem>
+                                        </Select>
                                         :
-                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={userData.gender}>{userData.gender}</Typography>
+                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={newUser.gender}>{newUser.gender}</Typography>
                                 }
                             </span>
                         </Grid>
@@ -160,9 +126,9 @@ const Info = ({ userData, column }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={userData.password} onChange={(e) => dispatch(setPassword(e.target.value))} />
+                                    <Input className={classes.input} value={newUser.password} onChange={updateData('password')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={userData.password}>{userData.password}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} component="p" key={newUser.password} gutterBottom>{newUser.password}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -174,12 +140,12 @@ const Info = ({ userData, column }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={userData.phone} onChange={(e) => dispatch(setPhone(e.target.value))} />
+                                    <Input className={classes.input} value={newUser.phone} onChange={updateData('phone')} />
                                     :
                                     <span>
                                         {
-                                            userData.phone ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={userData.phone}>{userData.phone}</Typography>
+                                            newUser.phone ?
+                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} component="p" key={newUser.phone} gutterBottom>{newUser.phone}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указан</Alert>
                                         }
@@ -192,9 +158,9 @@ const Info = ({ userData, column }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={userData.email} onChange={(e) => dispatch(setEmail(e.target.value))} />
+                                    <Input className={classes.input} value={newUser.email} onChange={updateData('email')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={userData.email}>{userData.email}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} component="p" key={newUser.email} gutterBottom>{newUser.email}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -203,7 +169,7 @@ const Info = ({ userData, column }) => {
                 <div className={classes.footer}>
                     {
                         edit ?
-                            <Button onClick={() => dispatch(getChange(userData))} variant="outlined">Сохранить</Button>
+                            <Button onClick={() => dispatch(getChange(newUser))} variant="outlined">Сохранить</Button>
                             :
                             <Button onClick={() => dispatch(editor(true))} variant="outlined">Изменить</Button>
                     }

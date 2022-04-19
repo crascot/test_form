@@ -17,12 +17,17 @@ import { getLogin, setEmail, setPassword, clear, clearType } from '../redux/feat
 
 
 const Login = ({
-  loading, formInputs, errors,
-  buttonStyle,
-  show, showPassword }) => {
+  form, show,
+  showPassword, buttonStyle, }) => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const dispatchGetLogin = () => dispatch(getLogin(form))
+  const dispatchSetEmail = (e) => dispatch(setEmail(e.target.value))
+  const dispatchSetPassword = (e) => dispatch(setPassword(e.target.value))
+  const dispatchClear = () => dispatch(clear())
+  const dispatchClearType = () => dispatch(clearType())
 
   return (
     <Container maxWidth='sm'>
@@ -30,38 +35,40 @@ const Login = ({
         <Grid className='form-register head' container direction="row" justify="space-between">
           <Typography variant='h5'>Войти в систему</Typography>
           <Typography variant='h5'>или</Typography>
-          <Link to='/register' onClick={() => dispatch(clear())} style={{ textDecoration: 'none' }}>
-            <Button className={classes.register} onClick={() => dispatch(clearType())} disabled={loading.disabled} variant="outlined" color="primary">
-              Зарегистриговаться
-            </Button>
-          </Link>
+          <span onClick={dispatchClear}>
+            <Link to='/register' style={{ textDecoration: 'none' }}>
+              <Button className={classes.register} onClick={dispatchClearType} disabled={form.disabled} variant="outlined" color="primary">
+                Зарегистриговаться
+              </Button>
+            </Link>
+          </span>
         </Grid>
         <Grid className={`form-register ${classes.body}`} container>
           <TextField
             fullWidth
             label="Введите почту"
-            value={formInputs.email}
-            onChange={(e) => dispatch(setEmail(e.target.value))}
-            disabled={loading.disabled}
+            value={form.email}
+            onChange={dispatchSetEmail}
+            disabled={form.disabled}
             type='email'
-            error={errors.errorEmail}
-            helperText={errors.emailText}
+            error={form.errorEmail}
+            helperText={form.emailText}
           />
           <span>
             <TextField
               fullWidth
               label="Введите пароль"
-              value={formInputs.password}
-              onChange={(e) => dispatch(setPassword(e.target.value))}
-              disabled={loading.disabled}
-              type={show === true ? 'text' : 'password'}
-              error={errors.errorPassword}
-              helperText={errors.passwordText}
+              value={form.password}
+              onChange={dispatchSetPassword}
+              disabled={form.disabled}
+              type={show ? 'text' : 'password'}
+              error={form.errorPassword}
+              helperText={form.passwordText}
             />
             <Button
               className={classes.showPasswordButton}
               onClick={showPassword}
-              disabled={loading.disabled}
+              disabled={form.disabled}
               style={{ marginBottom: buttonStyle }}
             >
               {show ? <VisibilityOffIcon /> : <VisibilityIcon />}
@@ -69,12 +76,12 @@ const Login = ({
           </span>
         </Grid>
         <Grid className={`form-register ${classes.footer}`} container direction="row" justify="space-between" alignItems="center">
-          <Button id='login' size="small" disabled={loading.disabled} variant="contained" onClick={() => dispatch(getLogin(formInputs))} type='submit'>
-            <Redirect to={loading.redirect === false ? '/' : '/feed/posts'} />
+          <Button id='login' size="small" disabled={form.disabled} variant="contained" onClick={dispatchGetLogin} type='submit'>
+            <Redirect to={!form.redirect ? '/' : '/feed/posts'} />
             Войти
           </Button>
-          <CircularProgress id='loader' className='visible' style={{ display: loading.loader }} />
-          <Button onClick={() => dispatch(clear())} type='submit' disabled={loading.disabled}>Очистить</Button>
+          <CircularProgress id='loader' className='visible' style={{ display: form.loader }} />
+          <Button onClick={dispatchClear} type='submit' disabled={form.disabled}>Очистить</Button>
         </Grid>
       </Card>
     </Container>

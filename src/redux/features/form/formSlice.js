@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { SignIn, CheckIn, DB } from '../../../services/services'
 
 
-const initialState = {
+export const initialState = {
     click: false,
     disabled: false,
     loader: 'none',
@@ -25,9 +25,9 @@ const initialState = {
 }
 
 export const getLogin = createAsyncThunk(
-    'form/getLogin', function (user, { dispatch }) {
+    'form/getLogin', async (user, { dispatch }) => {
         dispatch(started())
-        SignIn(user.email, user.password)
+        await SignIn(user.email, user.password)
             .then(() => dispatch(success()))
             .catch(() => { })
             .finally(() => dispatch(finished()))
