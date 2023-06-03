@@ -6,11 +6,9 @@ import {
     Button,
     TextField,
 } from '@material-ui/core';
-import {
-    Menu,
-    MenuItem
-} from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import { Redirect } from 'react-router';
+
 
 const useStyles = makeStyles({
     block: {
@@ -33,14 +31,17 @@ const useStyles = makeStyles({
     },
     name: {
         fontSize: 25
+    },
+    link: {
+        textDecoration: 'none',
+        color: 'inherit'
     }
 });
 
-const FeedHeader = ({ setToken, search, setSearch }) => {
+const FeedHeader = ({ search, setSearch, currentUser }) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = useState(null)
-    const [feedName] = useState(localStorage.getItem('userName'))
     const [redirect, setRedirect] = useState('/posts')
 
     const open = Boolean(anchorEl)
@@ -48,7 +49,10 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleClose = () => setAnchorEl(null)
     const profile = () => setRedirect('/profile')
-    const leave = () => setToken(localStorage.removeItem('auth_token'))
+    const leave = () => {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('id')
+    }
 
     return (
         <Box className={classes.block}>
@@ -66,7 +70,7 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
                     onClick={handleClick}
                 >
                     <Typography variant="body1" className={classes.name}>
-                        {feedName}
+                        {currentUser.name}
                     </Typography>
                 </Button>
                 <Menu
@@ -79,7 +83,7 @@ const FeedHeader = ({ setToken, search, setSearch }) => {
                     }}
                 >
                     <MenuItem onClick={profile}><Redirect to={redirect} />Профиль</MenuItem>
-                    <MenuItem onClick={leave}>Выйти</MenuItem>
+                    <a href='https://crascot.github.io/test_form/' onClick={leave} className={classes.link}><MenuItem onClick={leave}>Выйти</MenuItem></a>
                 </Menu>
             </div>
         </Box>

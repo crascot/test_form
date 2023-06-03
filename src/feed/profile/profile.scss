@@ -1,0 +1,34 @@
+@media (max-width: 883px) {
+    .main-title {
+        font-size: 2rem !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .paper {
+        flex-wrap: wrap;
+
+        .info {
+            max-width: 100%;
+            width: 100%;
+
+            .main-title {
+                display: flex;
+                justify-content: center;
+            }
+        }
+        .user {
+            max-width: 100%;
+            width: 100% !important;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    .block-data {
+        flex-wrap: wrap;
+    }
+    .title {
+        width: 100% !important;
+    }
+}
