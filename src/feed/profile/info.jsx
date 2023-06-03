@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Grid,
     Box,
     Typography,
     Button,
-    Menu,
+    Select,
     MenuItem,
     Input,
     Alert,
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
-import { changeData, DB } from '../../services/services';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getChange, editor } from '../../redux/features/profile/profileSlice';
+import { setUser } from '../../redux/features/profile/profileSlice';
 
 
 const useStyles = makeStyles({
@@ -55,59 +56,13 @@ const useStyles = makeStyles({
     },
 });
 
-const Info = ({ feedUser, name, setName, showError }) => {
+const Info = ({ newUser, column }) => {
 
-    const classes = useStyles();
+    const classes = useStyles()
+    const dispatch = useDispatch()
+    const edit = useSelector(state => state.profile.edit)
 
-    const [edit, setEdit] = useState(0)
-    const [column, setColumn] = useState()
-
-    const filtered = DB.users.filter(user => user.email !== feedUser.email ? false : user)
-
-    const [birthday, setBirthday] = useState(feedUser.birthday)
-    const [gender, setGender] = useState(feedUser.gender)
-    const [password, setPassword] = useState(feedUser.password)
-    const [phone, setPhone] = useState(feedUser.phone)
-    const [email, setEmail] = useState(feedUser.email)
-
-    if (!gender) setGender('Мужской')
-
-    const handleSubmit = () => {
-        changeData(name, birthday, gender, password, phone, email)
-            .then(() => {
-                filtered.forEach(user => {
-                    if (name) user.name = name
-                    if (birthday) user.birthday = birthday
-                    if (gender) user.gender = gender
-                    if (password) user.password = password
-                    if (phone) user.phone = phone
-                    if (email) user.email = email
-                })
-            }).then(() => {
-                localStorage.setItem('database', JSON.stringify(DB))
-                showError('none')('')
-                setEdit(false)
-            }).catch((text) => showError('flex')(text))
-    }
-
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleClose = () => setAnchorEl(null);
-    const changeGenderMen = () => {
-        setAnchorEl(null);
-        setGender('Мужской')
-    }
-    const changeGenderWomen = () => {
-        setAnchorEl(null);
-        setGender('Женский')
-    }
-
-    useEffect(() => {
-        if (window.innerWidth <= 883) setColumn('column');
-    }, [])
+    const updateData = (key) => (e) => dispatch(setUser({ ...newUser, [key]: e.target.value }))
 
     return (
         <Box className={`${classes.info} + info`}>
@@ -124,9 +79,9 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={name} onChange={(event) => setName(event.target.value)} />
+                                    <Input className={classes.input} value={newUser.name} onChange={updateData('name')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={name}>{name}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} component="p" key={newUser.name} gutterBottom>{newUser.name}</Typography>
                             }
                         </Grid>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={9}>
@@ -135,12 +90,12 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={birthday} onChange={(event) => setBirthday(event.target.value)} type='date' />
+                                    <Input className={classes.input} value={newUser.birthday} onChange={updateData('birthday')} type='date' />
                                     :
                                     <span>
                                         {
-                                            birthday ?
-                                                <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={birthday}>{birthday}</Typography>
+                                            newUser.birthday ?
+                                                <Typography variant="h6" style={{ marginBottom: 4 }} component="p" key={newUser.birthday} gutterBottom>{newUser.birthday}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указано</Alert>
                                         }
@@ -148,7 +103,6 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             }
                         </Grid>
                     </Grid>
-
                     <Grid container columns={16} direction={column}>
                         <Grid display='flex' alignItems='center' className={`${classes.blockData} + block-data`} item xs={8}>
                             <Typography variant="overline" display="block" className={`${classes.title} + title`} gutterBottom>
@@ -157,33 +111,12 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             <span>
                                 {
                                     edit ?
-                                        <div>
-                                            <Button
-                                                style={{ width: 'max-content', marginTop: '-4px' }}
-                                                variant="outlined"
-                                                id="basic-button"
-                                                aria-controls={open ? 'basic-menu' : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
-                                            >
-                                                {gender}
-                                            </Button>
-                                            <Menu
-                                                id="basic-menu"
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
-                                                MenuListProps={{
-                                                    'aria-labelledby': 'basic-button',
-                                                }}
-                                            >
-                                                <MenuItem onClick={changeGenderMen}>Мужской</MenuItem>
-                                                <MenuItem onClick={changeGenderWomen}>Женский</MenuItem>
-                                            </Menu>
-                                        </div>
+                                        <Select value={newUser.gender} onChange={updateData('gender')}>
+                                            <MenuItem value={'Мужской'}>Мужской</MenuItem>
+                                            <MenuItem value={'Женский'}>Женский</MenuItem>
+                                        </Select>
                                         :
-                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={gender}>{gender}</Typography>
+                                        <Typography variant="h6" style={{ marginBottom: 4 }} gutterBottom component="p" key={newUser.gender}>{newUser.gender}</Typography>
                                 }
                             </span>
                         </Grid>
@@ -193,9 +126,9 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={password} onChange={(event) => setPassword(event.target.value)} />
+                                    <Input className={classes.input} value={newUser.password} onChange={updateData('password')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} gutterBottom component="p" key={password}>{password}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 165 }} component="p" key={newUser.password} gutterBottom>{newUser.password}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -207,12 +140,12 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={phone} onChange={(event) => setPhone(event.target.value)} />
+                                    <Input className={classes.input} value={newUser.phone} onChange={updateData('phone')} />
                                     :
                                     <span>
                                         {
-                                            phone ?
-                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} gutterBottom component="p" key={phone}>{phone}</Typography>
+                                            newUser.phone ?
+                                                <Typography variant="h6" className={classes.data} style={{ maxWidth: 180 }} component="p" key={newUser.phone} gutterBottom>{newUser.phone}</Typography>
                                                 :
                                                 <Alert className={classes.alert} severity="warning">Не указан</Alert>
                                         }
@@ -225,9 +158,9 @@ const Info = ({ feedUser, name, setName, showError }) => {
                             </Typography>
                             {
                                 edit ?
-                                    <Input className={classes.input} value={email} onChange={(event) => setEmail(event.target.value)} />
+                                    <Input className={classes.input} value={newUser.email} onChange={updateData('email')} />
                                     :
-                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} gutterBottom component="p" key={email}>{email}</Typography>
+                                    <Typography variant="h6" className={classes.data} style={{ maxWidth: 200 }} component="p" key={newUser.email} gutterBottom>{newUser.email}</Typography>
                             }
                         </Grid>
                     </Grid>
@@ -235,10 +168,10 @@ const Info = ({ feedUser, name, setName, showError }) => {
 
                 <div className={classes.footer}>
                     {
-                        !edit ?
-                            <Button onClick={() => setEdit(true)} variant="outlined">Изменить</Button>
+                        edit ?
+                            <Button onClick={() => dispatch(getChange(newUser))} variant="outlined">Сохранить</Button>
                             :
-                            <Button onClick={handleSubmit} variant="outlined">Сохранить</Button>
+                            <Button onClick={() => dispatch(editor(true))} variant="outlined">Изменить</Button>
                     }
                 </div>
             </div>
